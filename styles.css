@@ -94,7 +94,7 @@ body {
 }
 
 #distance-box {
-	position: fixed;
+	position: absolute;
 	left: 0;
 	background: rgb(15, 15, 15);
 	padding: 10px;

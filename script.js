@@ -11,6 +11,7 @@ const hell_altitude = 270;
 var latitude;
 var longitude;
 var heading;
+var yaw;
 var pitch;
 var roll;
 
@@ -66,11 +67,11 @@ function handleGeoError(err) {
 // Save device orientation
 function handleOrientation(orientation) {
 	if (orientation.webkitCompassHeading) {
-		heading = orientation.webkitCompassHeading;
+		yaw = orientation.webkitCompassHeading;
 		
 		console.warn("Using webkit-specific compass heading.");
 	} else if (orientation.alpha) {
-		heading = orientation.alpha;
+		yaw = orientation.alpha;
 	};
 
 	pitch = orientation.beta;
@@ -79,21 +80,22 @@ function handleOrientation(orientation) {
 
 // Draw the arrow on the canvas
 function displayArrow() {
+	const compass = heading ? heading : yaw;
 	//if (!webgl || !(webgl instanceof WebGLRenderingContext)) {
 	//	displayError("webgl-no-support", "Please enable WebGL or use a browser which supports it.");
 	//	return;
 	//}
 
-	if (!heading) {
+	if (!compass) {
 		displayError("geo-no-support", "Your device does not support the required geolocation features.");
 		return;
 	} else {
 		displayError("geo-no-support");
 	}
 
-	if (latitude != null && longitude != null && heading != null && pitch != null && yaw != null) {
+	if (latitude != null && longitude != null && compass != null && pitch != null && yaw != null) {
 		console.log("Full range of data.");
-	} else if (latitude != null && longitude != null && heading != null) {
+	} else if (latitude != null && longitude != null && compass != null) {
 		console.warning("Only latitude, longitude, and heading.");
 	} else {
 		//return;

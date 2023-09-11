@@ -53,7 +53,7 @@ body {
 	float: right;
 }
 
-#error-box {
+#message-box {
 	position: absolute;
 	text-align: center;
 	width: clamp(200px, 20vw, 500px);

@@ -1,3 +1,9 @@
+// Check for iOS (AppleWebKit stinky)
+const isIOS = !(
+	navigator.userAgent.match(/(iPod|iPhone|iPad)/) &&
+	navigator.userAgent.match(/AppleWebKit/)
+);
+
 // Constants
 const hell_latitude = 42.4338 * (Math.PI / 180);
 const hell_longitude = -83.9845 * (Math.PI / 180);
@@ -25,7 +31,7 @@ function displayError(id, message = null, timeout = 0) {
 
 		$(`#error-template`).clone().attr({
 			id: id
-		}).html(message).appendTo("#error-box");
+		}).html(message).appendTo("#message-box");
 
 		if (timeout > 0) {
 			setTimeout(displayError(id), timeout);
@@ -41,6 +47,7 @@ function displayError(id, message = null, timeout = 0) {
 function handleGeoPosition(position) {
 	latitude = position.coords.latitude;
 	longitude = position.coords.longitude;
+	heading = position.coords.heading
 
 	displayError("geo-no-perm");
 	displayError("geo-error");
@@ -65,11 +72,11 @@ function handleGeoError(err) {
 // Save device orientation
 function handleOrientation(orientation) {
 	if (orientation.webkitCompassHeading) {
-		heading = orientation.webkitCompassHeading;
+		yaw = orientation.webkitCompassHeading;
 		
 		console.warn("Using webkit-specific compass heading.");
 	} else if (orientation.alpha) {
-		heading = orientation.alpha;
+		yaw = orientation.alpha;
 	};
 
 	pitch = orientation.beta;
@@ -81,18 +88,20 @@ function displayArrow() {
 	//if (!webgl || !(webgl instanceof WebGLRenderingContext)) {
 	//	displayError("webgl-no-support", "Please enable WebGL or use a browser which supports it.");
 	//	return;
-	//}
+	//	};
+	const hdn = yaw || heading;
 
-	if (!heading) {
-		displayError("geo-no-support", "Your device does not support the required geolocation features.");
+	if (!hdn && !isIOS) {
+		displayError("compass-no-support", "Your device does not support getting compass headings.");
 	} else {
-		displayError("geo-no-support");
+		displayError("compass-no-support");
 	}
 
-	if (latitude != null && longitude != null && heading != null && pitch != null && yaw != null) {
-		console.log("Full range of data.");
-	} else if (latitude != null && longitude != null && heading != null) {
+	//if (latitude != null && longitude != null && hdn != null && pitch != null && yaw != null) {
+	//	console.log("Full range of data.");
+	/*} else*/ if (latitude != null && longitude != null && hdn != null) {
 		console.warning("Only latitude, longitude, and heading.");
+		displayError("not yet implemented", "This feature is not finished yet.");
 	}
 
 	$("#distance").html(`${distance(latitude, longitude).toFixed(2).toLocaleString()}km`);
@@ -117,6 +126,22 @@ function distance(lat, lon) {
 	return 6371 * 2 * Math.asin(Math.sqrt(a));
 };
 
+// Get orientation
+if (isIOS) {
+	DeviceOrientationEvent.requestPermission()
+	.then((response) => {
+		if (response === "granted") {
+			window.addEventListener("deviceorientation", handleOrientation, true);
+		} else {
+			displayError("compass-no-perm", "Please allow getting device orientation.");
+		}
+	}).catch(() => {
+		displayError("compass-no-support", "Your device does not support getting compass headings.")
+	});
+} else {
+	window.addEventListener("deviceorientationabsolute", handleOrientation, true);
+}
+
 // Check for geolocation support
 if ("geolocation" in navigator) {
 	navigator.geolocation.getCurrentPosition(handleGeoPosition, handleGeoError);
@@ -124,8 +149,6 @@ if ("geolocation" in navigator) {
 } else {
 	displayError("geo-no-support", "Your device does not support geolocation.");
 }
-
-window.addEventListener("deviceorientation", handleOrientation, true);
 
 // Async infinite loop to draw arrow
 async function loop() {

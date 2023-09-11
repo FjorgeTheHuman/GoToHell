@@ -1,5 +1,5 @@
 // Check for iOS (AppleWebKit stinky)
-const isIOS = !(
+const isIOS = !!(
 	navigator.userAgent.match(/(iPod|iPhone|iPad)/) &&
 	navigator.userAgent.match(/AppleWebKit/)
 );

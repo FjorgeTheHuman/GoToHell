@@ -128,16 +128,22 @@ function distance(lat, lon) {
 
 // Get orientation
 if (isIOS) {
-	DeviceOrientationEvent.requestPermission()
-	.then((response) => {
-		if (response === "granted") {
-			window.addEventListener("deviceorientation", handleOrientation, true);
-		} else {
-			displayError("compass-no-perm", "Please allow getting device orientation.");
-		}
-	}).catch(() => {
-		displayError("compass-no-support", "Your device does not support getting compass headings.")
-	});
+	function requestOrientationPermission() {
+		DeviceOrientationEvent.requestPermission()
+		.then((response) => {
+			if (response === "granted") {
+				window.addEventListener("deviceorientation", handleOrientation, true);
+				
+				$('#message-ask-orient-perm').attr({style: "display: none;"});
+			} else {
+				displayError("compass-no-perm", "Please allow getting device orientation.");
+			}
+		}).catch(() => {
+			displayError("compass-no-support", "Your device does not support getting compass headings.")
+		});
+	};
+
+	$('message-ask-orient-perm').attr({style: ""}).on('click', requestOrientationPermission);
 } else {
 	window.addEventListener("deviceorientationabsolute", handleOrientation, true);
 }

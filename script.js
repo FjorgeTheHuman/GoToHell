@@ -87,6 +87,8 @@ function displayArrow() {
 	if (!heading) {
 		displayError("geo-no-support", "Your device does not support the required geolocation features.");
 		return;
+	} else {
+		displayError("geo-no-support");
 	}
 
 	if (latitude != null && longitude != null && heading != null && pitch != null && yaw != null) {

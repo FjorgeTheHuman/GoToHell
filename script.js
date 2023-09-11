@@ -41,8 +41,6 @@ function displayError(id, message = null, timeout = 0) {
 function handleGeoPosition(position) {
 	latitude = position.coords.latitude;
 	longitude = position.coords.longitude;
-	heading = position.coords.heading;
-
 
 	displayError("geo-no-perm");
 	displayError("geo-error");
@@ -67,11 +65,11 @@ function handleGeoError(err) {
 // Save device orientation
 function handleOrientation(orientation) {
 	if (orientation.webkitCompassHeading) {
-		yaw = orientation.webkitCompassHeading;
+		heading = orientation.webkitCompassHeading;
 		
 		console.warn("Using webkit-specific compass heading.");
 	} else if (orientation.alpha) {
-		yaw = orientation.alpha;
+		heading = orientation.alpha;
 	};
 
 	pitch = orientation.beta;
@@ -80,25 +78,21 @@ function handleOrientation(orientation) {
 
 // Draw the arrow on the canvas
 function displayArrow() {
-	const compass = heading ? heading : yaw;
 	//if (!webgl || !(webgl instanceof WebGLRenderingContext)) {
 	//	displayError("webgl-no-support", "Please enable WebGL or use a browser which supports it.");
 	//	return;
 	//}
 
-	if (!compass) {
+	if (!heading) {
 		displayError("geo-no-support", "Your device does not support the required geolocation features.");
-		return;
 	} else {
 		displayError("geo-no-support");
 	}
 
-	if (latitude != null && longitude != null && compass != null && pitch != null && yaw != null) {
+	if (latitude != null && longitude != null && heading != null && pitch != null && yaw != null) {
 		console.log("Full range of data.");
-	} else if (latitude != null && longitude != null && compass != null) {
+	} else if (latitude != null && longitude != null && heading != null) {
 		console.warning("Only latitude, longitude, and heading.");
-	} else {
-		//return;
 	}
 
 	$("#distance").html(`${distance(latitude, longitude).toFixed(2).toLocaleString()}km`);

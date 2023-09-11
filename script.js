@@ -42,10 +42,6 @@ function handleGeoPosition(position) {
 	longitude = position.coords.longitude;
 	heading = position.coords.heading;
 
-	if (!heading) {
-		displayError("geo-no-support", "Your device does not support the required geolocation features.");
-		return;
-	}
 
 	displayError("geo-no-perm");
 	displayError("geo-error");
@@ -87,6 +83,11 @@ function displayArrow() {
 	//	displayError("webgl-no-support", "Please enable WebGL or use a browser which supports it.");
 	//	return;
 	//}
+
+	if (!heading) {
+		displayError("geo-no-support", "Your device does not support the required geolocation features.");
+		return;
+	}
 
 	if (latitude != null && longitude != null && heading != null && pitch != null && yaw != null) {
 		console.log("Full range of data.");

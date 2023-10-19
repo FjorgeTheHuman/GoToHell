@@ -153,53 +153,51 @@ window.addEventListener("load", () => {
 
 	camera.position.z = 3;
 
-	// Draw the arrow on the canvas
-	function displayArrow() {
-		requestAnimationFrame(displayArrow);
+	// Load the arrow
+	loader.load('static/arrow.gltf', function (gltf) {
+		const model = gltf.scene;
+		scene.add(model);
 
-		const hdn = yaw || heading;
+		// model.scale.set(1000, 1000, 1000);
 
-		if (!hdn && !DeviceOrientationEvent.requestPermission) {
-			displayError("compass-no-support", "Your device does not support getting compass headings.");
-		} else {
-			displayError("compass-no-support");
-		}
+		// model.rotation.x = hdn;
+		// model.rotation.y = pitch;
+		// model.rotation.z = roll;
+		
+		// Draw the arrow on the canvas
+		function displayArrow() {
+			requestAnimationFrame(displayArrow);
 
-		//if (latitude != null && longitude != null && hdn != null && pitch != null && yaw != null) {
-		//	console.log("Full range of data.");
-		/*} else*/ if (latitude != null && longitude != null && hdn != null) {
-			console.warning("Only latitude, longitude, and heading.");
-			displayError("not yet implemented", "This feature is not finished yet.");
-		}
+			const hdn = yaw || heading;
 
-		$("#distance").html(`${distance(latitude, longitude).toFixed(2).toLocaleString()}km`);
+			if (!hdn && !DeviceOrientationEvent.requestPermission) {
+				displayError("compass-no-support", "Your device does not support getting compass headings.");
+			} else {
+				displayError("compass-no-support");
+			}
 
-		// Make the render size a square
-		const size = Math.min(document.getElementById("center").clientWidth, document.getElementById("center").clientHeight);
-		renderer.setSize(size, size);
+			//if (latitude != null && longitude != null && hdn != null && pitch != null && yaw != null) {
+			//	console.log("Full range of data.");
+			/*} else*/ if (latitude != null && longitude != null && hdn != null) {
+				console.warning("Only latitude, longitude, and heading.");
+				displayError("not yet implemented", "This feature is not finished yet.");
+			}
 
-		// Load the arrow
-		loader.load('static/arrow.gltf', function (gltf) {
-			const model = gltf.scene;
-			scene.add(model);
+			$("#distance").html(`${distance(latitude, longitude).toFixed(2).toLocaleString()}km`);
 
-			model.scale.set(1000, 1000, 1000);
+			// Make the render size a square
+			const size = Math.min(document.getElementById("center").clientWidth, document.getElementById("center").clientHeight);
+			renderer.setSize(size, size);
 
-			// model.rotation.x = hdn;
-			// model.rotation.y = pitch;
-			// model.rotation.z = roll;
-			
+			// Render the scene
 			renderer.render(scene, camera);
-		}, undefined, function (error) {
-			console.error(error);
-		});
+		};
 
-		// Render the scene
-		//renderer.render(scene, camera);
-	};
-
-	// draw arrow forever
-	displayArrow();
+		// draw arrow forever
+		displayArrow();
+	}, undefined, function (error) {
+		console.error(error);
+	});
 });
 
 // vim:ts=2:sw=2:noexpandtab

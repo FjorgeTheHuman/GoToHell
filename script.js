@@ -152,12 +152,9 @@ window.addEventListener("load", () => {
 
 	scene.add(new THREE.AxesHelper(5))
 
-	const light = new THREE.PointLight(0xffffff, 2);
-	light.position.set(0, 7.5, 0);
-	scene.add(light);
 
 	// Add some light
-	const alight = new THREE.AmbientLight(0xa6a6a6);
+	const alight = new THREE.AmbientLight(0x8c8c8c);
 	scene.add(alight);
 
 	camera.position.z = 5;
@@ -177,6 +174,11 @@ window.addEventListener("load", () => {
 		});
 
 		scene.add(model);
+
+		// Add a light to the model
+		const light = new THREE.PointLight(0xa6a6a6, 2);
+		light.position.set(0, 0, 7.5);
+		model.add(light);
 		
 		// Make the render size a square
 		const size = Math.min(document.getElementById("center").clientWidth, document.getElementById("center").clientHeight);

@@ -99,7 +99,7 @@ window.addEventListener("load", () => {
 	};
 
 	// Get orientation
-	if (DeviceOrientationEvent.requestPermission && !DeviceOrientationEvent.requestPermission()) {
+	if (DeviceOrientationEvent.requestPermission) {
 		console.warn("Requesting permission for device orientation.")
 
 		function requestOrientationPermission() {

@@ -155,12 +155,10 @@ window.addEventListener("load", () => {
 
 	// Load the arrow
 	loader.load('static/arrow.gltf', function (gltf) {
-		const model = gltf.scene;
+		let model = gltf.scene;
 		scene.add(model);
 
-		// model.scale.set(1000, 1000, 1000);
-
-		window.json = gltf.scene;
+		model.scale.set(0.001, 0.001, 0.001);
 
 		// model.rotation.x = hdn;
 		// model.rotation.y = pitch;

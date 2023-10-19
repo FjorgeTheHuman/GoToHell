@@ -32,13 +32,6 @@ function calcBearing(lat1, lon1, lat2, lon2) {
 window.addEventListener("load", () => {
 	const canVibrate = ('vibrate' in window.navigator);
 
-	const audioContext = new window.AudioContext();
-
-	const fire_el = new Audio('static/fire.mp3');
-	const fire = audioContext.createMediaElementSource(fire_el);
-	fire.connect(audioContext.destination);
-	fire_el.loop = true;
-
 	// Constants
 	const hell_latitude = 42.4338 * (Math.PI / 180);
 	const hell_longitude = -83.9845 * (Math.PI / 180);
@@ -51,15 +44,6 @@ window.addEventListener("load", () => {
 	var yaw;
 	var pitch;
 	var roll;
-
-	function playFire() {
-		if (audioContext.state === 'suspended') {
-			audioContext.resume();
-		}
-
-		fire_el.play();
-		fire_el.loop = true;
-	}
 
 	// Display errors as HTML
 	function displayError(id, message = null, timeout = 0) {
@@ -141,8 +125,6 @@ window.addEventListener("load", () => {
 		console.warn("Requesting permission for device orientation.")
 
 		function requestOrientationPermission() {
-			playFire();
-
 			DeviceOrientationEvent.requestPermission()
 			.then((response) => {
 				if (response === "granted") {
@@ -152,8 +134,6 @@ window.addEventListener("load", () => {
 					$('#message-ask-orient-perm').attr({style: "display: none;"});
 				} else {
 					displayError("compass-no-perm", "Please allow getting device orientation.");
-
-					fire_el.stop();
 				}
 			}).catch(() => {
 				displayError("compass-no-support", "Your device does not support getting compass headings.")
@@ -164,8 +144,6 @@ window.addEventListener("load", () => {
 		request.addEventListener("click", requestOrientationPermission);
 		request.style = {};
 	} else {
-		playFire();
-
 		window.addEventListener("deviceorientationabsolute", handleOrientation, true);
 	}
 
@@ -239,11 +217,6 @@ window.addEventListener("load", () => {
 			// Call function every frame
 			requestAnimationFrame(displayArrow);
 
-			// Play fire audio
-			if (fire_el.paused || fire_el.ended) {
-				playFire();
-			}
-
 			// Get distance between user and hell
 			const distance = calcDistance(latitude, longitude, hell_latitude, hell_longitude);
 			const bearing = calcBearing(latitude, longitude, hell_latitude, hell_longitude);
@@ -279,8 +252,6 @@ window.addEventListener("load", () => {
 			} else if (canVibrate) {
 				window.navigator.vibrate(0);
 			}
-
-			// TODO: Adjust audio volume
 
 			// Display the distance between user location and Hell
 			$("#distance").html(`${distance.toFixed(2).toLocaleString()}km`);

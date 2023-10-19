@@ -165,7 +165,7 @@ scene.add(light)
 	renderer.domElement.id = "arrow";
 
 	// Load the arrow
-	loader.load('static/arrow.glb', function (gltf) {
+	loader.load('static/arrow.gltf', function (gltf) {
 		let model = gltf.scene;
 
 		var newMaterial = new THREE.MeshStandardMaterial({color: 0xff0000});

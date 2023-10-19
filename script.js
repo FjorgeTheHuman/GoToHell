@@ -162,8 +162,6 @@ scene.add(light)
 	document.getElementById("center").appendChild(renderer.domElement);
 	renderer.domElement.id = "arrow";
 
-	camera.position.z = 5;
-
 	// Load the arrow
 	loader.load('static/arrow.glb', function (gltf) {
 		let model = gltf.scene;
@@ -173,7 +171,12 @@ model.traverse((o) => {
   if (o.isMesh) o.material = newMaterial;
 });
 
-		// model.rotation.x = hdn;
+		model.scale.set(10, 10, 10);
+
+		// TODO Rotate model with thing
+		model.rotation.x = Math.PI;
+		model.rotation.z = Math.PI / 2;
+		//model.rotation.x = hdn;
 		// model.rotation.y = pitch;
 		// model.rotation.z = roll;
 		

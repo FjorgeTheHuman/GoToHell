@@ -175,7 +175,7 @@ window.addEventListener("load", () => {
 		renderer.setSize(size, size);
 
 		// Load the arrow
-		loader.load('static/arrow.glb', function (gltf) {
+		loader.load('static/arrow.gltf', function (gltf) {
 			scene.add(gltf.scene);
 
 			gltf.rotation.x = hdn;

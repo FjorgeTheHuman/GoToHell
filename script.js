@@ -30,6 +30,7 @@ function calcBearing(lat1, lon1, lat2, lon2) {
 };
 
 window.addEventListener("load", () => {
+	const canVibrate = ('vibrate' in window.navigator);
 	// Constants
 	const hell_latitude = 42.4338 * (Math.PI / 180);
 	const hell_longitude = -83.9845 * (Math.PI / 180);
@@ -109,7 +110,7 @@ window.addEventListener("load", () => {
 	// Vibrate morse code for "go to hell"
 	var vibrate_lock = false;
 	function vibrate() {
-		if (vibrate_lock || !('vibrate' in window.navigator)) {
+		if (vibrate_lock) {
 			return;
 		}
 
@@ -236,17 +237,18 @@ window.addEventListener("load", () => {
 			if (latitude != null && longitude != null && hdn != null && pitch != null && yaw != null) {
 				model.rotation.x = -pitch;
 				model.rotation.y = -roll;
-				model.rotation.z = hdn;
+				model.rotation.z = hdn + bearing;
 
 				// TODO: Calculate angle to hell
-				model.rotation.z += bearing;
 			} else if (latitude != null && longitude != null && hdn != null) {
 				// TODO: Implement 2D compass
 			}
 
 			if (Math.abs(bearing - hdn) < (Math.PI / 12)) {
-				vibrate();
-			} else {
+				if (canVibrate) {
+					vibrate();
+				}
+			} else if (canVibrate) {
 				window.navigator.vibrate(0);
 			}
 

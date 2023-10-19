@@ -151,14 +151,14 @@ window.addEventListener("load", () => {
 	document.getElementById("center").appendChild(renderer.domElement);
 	renderer.domElement.id = "arrow";
 
-	camera.position.z = 3;
+	camera.position.z = 5;
 
 	// Load the arrow
 	loader.load('static/arrow.glb', function (gltf) {
 		let model = gltf.scene;
 		scene.add(model);
 
-		model.scale.set(0.001, 0.001, 0.001);
+		model.scale.set(0.1, 0.1, 0.1);
 
 		// model.rotation.x = hdn;
 		// model.rotation.y = pitch;

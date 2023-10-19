@@ -78,26 +78,6 @@ window.addEventListener("load", () => {
 		roll = orientation.gamma;
 	};
 
-	// Draw the arrow on the canvas
-	function displayArrow() {
-		const hdn = yaw || heading;
-
-		if (!hdn && !DeviceOrientationEvent.requestOrientationPermission) {
-			displayError("compass-no-support", "Your device does not support getting compass headings.");
-		} else {
-			displayError("compass-no-support");
-		}
-
-		//if (latitude != null && longitude != null && hdn != null && pitch != null && yaw != null) {
-		//	console.log("Full range of data.");
-		/*} else*/ if (latitude != null && longitude != null && hdn != null) {
-			console.warning("Only latitude, longitude, and heading.");
-			displayError("not yet implemented", "This feature is not finished yet.");
-		}
-
-		$("#distance").html(`${distance(latitude, longitude).toFixed(2).toLocaleString()}km`);
-	};
-
 	// Vibrate morse code for "go to hell"
 	function vibrate() {
 		window.navigator.vibrate([300, 100, 300, 100, 100, 300, 300, 100, 300, 100, 300, 700, 300, 300, 300, 100, 300, 100, 300, 700, 100, 100, 100, 100, 100, 100, 100, 300, 100, 300, 100, 100, 300, 100, 100, 100, 100, 300, 100, 100, 300, 100, 100, 100, 100, 100, 700]);
@@ -118,7 +98,7 @@ window.addEventListener("load", () => {
 	};
 
 	// Get orientation
-	if (DeviceOrientationEvent.requestPermission) {
+	if (DeviceOrientationEvent.requestPermission && !DeviceOrientationEvent.requestPermission()) {
 		console.warn("Requesting permission for device orientation.")
 
 		function requestOrientationPermission() {
@@ -157,16 +137,59 @@ window.addEventListener("load", () => {
 		displayError("geo-no-support", "Your device does not support geolocation.");
 	}
 
-	// Async infinite loop to draw arrow
-	async function loop() {
-		while (true) {
-			displayArrow();
+	// Create the required three.js objects
+	const scene = new THREE.Scene();
+	const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+	const renderer = new THREE.WebGLRenderer();
 
-			await wait(50);
-		};
+	document.getElementById("center").appendChild(renderer.domElement);
+	renderer.domElement.id = "arrow";
+
+	// TODO: remove
+	// temporary cube for three.js test
+	const geometry = new THREE.BoxGeometry( 1, 1, 1 );
+	const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+	const cube = new THREE.Mesh( geometry, material );
+	scene.add( cube );
+
+	camera.position.z = 5;
+
+	// Draw the arrow on the canvas
+	function displayArrow() {
+		requestAnimationFrame(displayArrow);
+
+		const hdn = yaw || heading;
+
+		if (!hdn && !DeviceOrientationEvent.requestPermission) {
+			displayError("compass-no-support", "Your device does not support getting compass headings.");
+		} else {
+			displayError("compass-no-support");
+		}
+
+		//if (latitude != null && longitude != null && hdn != null && pitch != null && yaw != null) {
+		//	console.log("Full range of data.");
+		/*} else*/ if (latitude != null && longitude != null && hdn != null) {
+			console.warning("Only latitude, longitude, and heading.");
+			displayError("not yet implemented", "This feature is not finished yet.");
+		}
+
+		$("#distance").html(`${distance(latitude, longitude).toFixed(2).toLocaleString()}km`);
+
+		// Make the render size a square
+		const size = Math.min(document.getElementById("center").clientWidth, document.getElementById("center").clientHeight);
+		renderer.setSize(size, size);
+
+		// TODO: remove
+		// Temporary cube rotation
+		cube.rotation.x += 0.01;
+		cube.rotation.y += 0.01;
+
+		// Render the scene
+		renderer.render(scene, camera);
 	};
 
-	loop();
+	// draw arrow forever
+	displayArrow();
 });
 
 // vim:ts=2:sw=2:noexpandtab

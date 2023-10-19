@@ -233,10 +233,17 @@ window.addEventListener("load", () => {
 
 			// Different modes for a device with full sensors and only compass
 			if (latitude != null && longitude != null && hdn != null && pitch != null && yaw != null) {
-				model.rotation.x = -pitch;
-				model.rotation.y = -roll;
-				model.rotation.z = hdn + bearing;
+				model.rotateZ(hdn + bearing);
+				model.rotateX(-pitch);
+				model.rotateY(-roll);
 
+				/*if (pitch > Math.PI / 2 || pitch < Math.PI / 2) {
+					model.rotateY(roll);
+				} else {
+					model.rotation.y = -roll;
+				}
+
+				model.rotation.x = -pitch;*/
 				// TODO: Calculate angle to hell
 			} else if (latitude != null && longitude != null && hdn != null) {
 				model.rotation.x = 0;

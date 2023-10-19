@@ -34,7 +34,7 @@ window.addEventListener("load", () => {
 
 	const fire = new Audio('static/fire.mp3');
 	fire.addEventListener('loadeddata', () => {
-		fire.loop = true;
+		fire.loop = false;
 		fire.controls = false;
 		fire.defaultMuted = false;
 		fire.muted = false;

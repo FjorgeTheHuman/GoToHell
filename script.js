@@ -31,6 +31,14 @@ function calcBearing(lat1, lon1, lat2, lon2) {
 
 window.addEventListener("load", () => {
 	const canVibrate = ('vibrate' in window.navigator);
+
+	const fire = new Audio('static/fire.mp3');
+	fire.addEventListener('loadeddata', () => {
+		fire.loop = true;
+		fire.controls = false;
+		fire.defaultMuted = false;
+		fire.muted = false;
+	})
 	// Constants
 	const hell_latitude = 42.4338 * (Math.PI / 180);
 	const hell_longitude = -83.9845 * (Math.PI / 180);
@@ -179,7 +187,6 @@ window.addEventListener("load", () => {
 
 	scene.add(new THREE.AxesHelper(5))
 
-
 	// Add some light
 	const alight = new THREE.AmbientLight(0x8c8c8c);
 	scene.add(alight);
@@ -219,6 +226,11 @@ window.addEventListener("load", () => {
 			// Call function every frame
 			requestAnimationFrame(displayArrow);
 
+			// Play fire audio
+			if (fire.paused || fire.ended) {
+				fire.play();
+			}
+
 			// Get distance between user and hell
 			const distance = calcDistance(latitude, longitude, hell_latitude, hell_longitude);
 			const bearing = calcBearing(latitude, longitude, hell_latitude, hell_longitude);
@@ -246,13 +258,17 @@ window.addEventListener("load", () => {
 				model.rotation.z = hdn + bearing;
 			}
 
-			if (Math.abs(bearing - hdn) < (Math.PI / 12)) {
+			// Vibrate if possible and arrow is close enough
+			if (Math.abs(bearing - hdn) < (Math.PI / 18)) {
 				if (canVibrate) {
 					vibrate();
 				}
 			} else if (canVibrate) {
 				window.navigator.vibrate(0);
 			}
+
+			// TODO: Adjust audio volume
+			fire.volume = Math.abs(bearing - hdn) / Math.PI;
 
 			// Display the distance between user location and Hell
 			$("#distance").html(`${distance.toFixed(2).toLocaleString()}km`);

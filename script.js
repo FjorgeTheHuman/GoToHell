@@ -232,10 +232,17 @@ window.addEventListener("load", () => {
 			}
 
 			// Different modes for a device with full sensors and only compass
-			if (latitude != null && longitude != null && hdn != null && pitch != null && yaw != null) {
-				rot = new THREE.Euler(hdn + bearing, -pitch, -roll, 'ZXY');
-				model.rotation = rot.reorder('XYZ');
-				/*model.rotateZ(hdn + bearing);
+			if (latitude != null && longitude != null && hdn != null && pitch != null && roll != null) {
+				//const rot = new THREE.Euler(hdn + bearing, -pitch, -roll, 'ZXY');
+				//console.log(rot);
+				//model.rotation = rot.reorder('XYZ');
+				//console.log(rot);
+
+				model.rotation.x = 0;
+				model.rotation.y = 0;
+				model.rotation.z = 0;
+				
+				model.rotateZ(hdn + bearing);
 				model.rotateX(-pitch);
 				model.rotateY(-roll);
 

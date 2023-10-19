@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import WebGL from 'three/addons/capabilities/WebGL.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 window.addEventListener("load", () => {
 
@@ -142,11 +143,21 @@ window.addEventListener("load", () => {
 	const scene = new THREE.Scene();
 	const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
 	const renderer = new THREE.WebGLRenderer();
+	renderer.outputColorSpace = THREE.SRGBColorSpace;
 	const loader = new GLTFLoader();
 
+const controls = new OrbitControls(camera, renderer.domElement)
+controls.enableDamping = true
+
+	scene.add(new THREE.AxesHelper(5))
+
+const light = new THREE.PointLight(0xffffff, 1000)
+light.position.set(2.5, 7.5, 15)
+scene.add(light)
+
 	// Add some light
-	const light = new THREE.AmbientLight(0xffffff);
-	scene.add(light);
+	const ilight = new THREE.AmbientLight(0xffffff);
+	scene.add(ilight);
 
 	document.getElementById("center").appendChild(renderer.domElement);
 	renderer.domElement.id = "arrow";
@@ -192,7 +203,7 @@ window.addEventListener("load", () => {
 			}
 
 			$("#distance").html(`${distance(latitude, longitude).toFixed(2).toLocaleString()}km`);
-
+controls.update()
 			// Make the render size a square
 			const size = Math.min(document.getElementById("center").clientWidth, document.getElementById("center").clientHeight);
 			renderer.setSize(size, size);
@@ -202,7 +213,7 @@ window.addEventListener("load", () => {
 		};
 
 		// draw arrow forever
-		//displayArrow();
+		displayArrow();
 	}, undefined, function (error) {
 		console.error(error);
 	});

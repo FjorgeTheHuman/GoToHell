@@ -44,7 +44,7 @@ window.addEventListener("load", () => {
 	function handleGeoPosition(position) {
 		latitude = position.coords.latitude;
 		longitude = position.coords.longitude;
-		heading = position.coords.heading
+		heading = position.coords.heading * Math.PI / 2;
 
 		displayError("geo-no-perm");
 		displayError("geo-error");
@@ -187,26 +187,31 @@ window.addEventListener("load", () => {
 
 		// Draw the arrow on the canvas
 		function displayArrow() {
+			// Call function every frame
 			requestAnimationFrame(displayArrow);
 
+			// Get compass heading
 			const hdn = yaw || heading;
 
+			// Display error if the device has no compass
 			if (!hdn && !DeviceOrientationEvent.requestPermission) {
 				displayError("compass-no-support", "Your device does not support getting compass headings.");
 			} else {
 				displayError("compass-no-support");
 			}
 
+			// Different modes for a device with full sensors and only compass
 			if (latitude != null && longitude != null && hdn != null && pitch != null && yaw != null) {
 				model.rotation.x = -pitch;
 				model.rotation.y = -roll;
-				model.rotation.z = yaw;
+				model.rotation.z = hdn;
 
 				// TODO: Calculate angle to hell
 			} else if (latitude != null && longitude != null && hdn != null) {
 				// TODO: Implement 2D compass
 			}
 
+			// Set the distance between user location and Hell
 			$("#distance").html(`${distance(latitude, longitude).toFixed(2).toLocaleString()}km`);
 
 			controls.update()
@@ -219,7 +224,7 @@ window.addEventListener("load", () => {
 			renderer.render(scene, camera);
 		};
 
-		// draw arrow forever
+		// Draw the arrow
 		displayArrow();
 	}, undefined, function (error) {
 		console.error(error);

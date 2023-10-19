@@ -143,7 +143,7 @@ window.addEventListener("load", () => {
 	const renderer = new THREE.WebGLRenderer();
 
 	document.getElementById("center").appendChild(renderer.domElement);
-	domElement.id = "arrow";
+	renderer.domElement.id = "arrow";
 
 	// TODO: remove
 	// temporary cube for three.js test

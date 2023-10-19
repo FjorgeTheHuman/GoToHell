@@ -198,9 +198,9 @@ window.addEventListener("load", () => {
 			}
 
 			if (latitude != null && longitude != null && hdn != null && pitch != null && yaw != null) {
-				model.rotation.x = (-Math.PI / 2) - pitch;
+				model.rotation.x = -pitch;
 				model.rotation.y = -roll;
-				model.rotation.z = -yaw;
+				model.rotation.z = yaw;
 
 				// TODO: Calculate angle to hell
 			} else if (latitude != null && longitude != null && hdn != null) {

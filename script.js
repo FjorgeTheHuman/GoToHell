@@ -160,6 +160,8 @@ window.addEventListener("load", () => {
 
 		// model.scale.set(1000, 1000, 1000);
 
+		window.VIEWER.json = gltf.scene;
+
 		// model.rotation.x = hdn;
 		// model.rotation.y = pitch;
 		// model.rotation.z = roll;

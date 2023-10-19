@@ -30,7 +30,6 @@ function calcBearing(lat1, lon1, lat2, lon2) {
 };
 
 window.addEventListener("load", () => {
-
 	// Constants
 	const hell_latitude = 42.4338 * (Math.PI / 180);
 	const hell_longitude = -83.9845 * (Math.PI / 180);
@@ -110,7 +109,7 @@ window.addEventListener("load", () => {
 	// Vibrate morse code for "go to hell"
 	var vibrate_lock = false;
 	function vibrate() {
-		if (vibrate_lock) {
+		if (vibrate_lock || !('vibrate' in window.navigator)) {
 			return;
 		}
 
@@ -160,6 +159,11 @@ window.addEventListener("load", () => {
 		navigator.geolocation.watchPosition(handleGeoPosition, handleGeoError);
 	} else {
 		displayError("geo-no-support", "Your device does not support geolocation.");
+	}
+
+	// Lock orientation to portrait if possible
+	if ('lock' in screen.orientation) {
+		screen.orientation.lock('portrait-primary');
 	}
 
 	// Create the required three.js objects

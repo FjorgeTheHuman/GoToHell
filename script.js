@@ -152,13 +152,13 @@ window.addEventListener("load", () => {
 
 	scene.add(new THREE.AxesHelper(5))
 
-	const light = new THREE.PointLight(0xffffff, 1000)
-	light.position.set(2.5, 7.5, 15)
-	scene.add(light)
+	const light = new THREE.PointLight(0xffffff, 2);
+	light.position.set(0, 7.5, 0);
+	scene.add(light);
 
 	// Add some light
-	const ilight = new THREE.AmbientLight(0xffffff);
-	scene.add(ilight);
+	const alight = new THREE.AmbientLight(0xa6a6a6);
+	scene.add(alight);
 
 	camera.position.z = 5;
 

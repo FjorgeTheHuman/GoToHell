@@ -37,7 +37,7 @@ window.addEventListener("load", () => {
 	const fire_el = new Audio('static/fire.mp3');
 	const fire = audioContext.createMediaElementSource(fire_el);
 	fire.connect(audioContext.destination);
-	fire.loop = true;
+	fire_el.loop = true;
 
 	// Constants
 	const hell_latitude = 42.4338 * (Math.PI / 180);
@@ -135,7 +135,7 @@ window.addEventListener("load", () => {
 		console.warn("Requesting permission for device orientation.")
 
 		function requestOrientationPermission() {
-			fire.start();
+			fire_el.start();
 
 			DeviceOrientationEvent.requestPermission()
 			.then((response) => {
@@ -147,7 +147,7 @@ window.addEventListener("load", () => {
 				} else {
 					displayError("compass-no-perm", "Please allow getting device orientation.");
 
-					fire.stop();
+					fire_el.stop();
 				}
 			}).catch(() => {
 				displayError("compass-no-support", "Your device does not support getting compass headings.")
@@ -158,7 +158,7 @@ window.addEventListener("load", () => {
 		request.addEventListener("click", requestOrientationPermission);
 		request.style = {};
 	} else {
-		fire.start();
+		fire_el.start();
 
 		window.addEventListener("deviceorientationabsolute", handleOrientation, true);
 	}
@@ -234,8 +234,8 @@ window.addEventListener("load", () => {
 			requestAnimationFrame(displayArrow);
 
 			// Play fire audio
-			if (fire.paused || fire.ended) {
-				fire.play();
+			if (fire_el.paused || fire_el.ended) {
+				fire_el.play();
 			}
 
 			// Get distance between user and hell
@@ -275,7 +275,7 @@ window.addEventListener("load", () => {
 			}
 
 			// TODO: Adjust audio volume
-			fire.volume = Math.abs(bearing - hdn) / Math.PI;
+			fire_el.volume = 1 - Math.abs(bearing - hdn) / Math.PI;
 
 			// Display the distance between user location and Hell
 			$("#distance").html(`${distance.toFixed(2).toLocaleString()}km`);

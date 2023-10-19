@@ -156,7 +156,7 @@ window.addEventListener("load", () => {
 
 	// Draw the arrow on the canvas
 	function displayArrow() {
-		requestAnimationFrame(animate);
+		requestAnimationFrame(displayArrow);
 
 		const hdn = yaw || heading;
 

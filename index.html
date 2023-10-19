@@ -5,10 +5,17 @@
 		<!-- Load JQuery -->
 		<script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
 		<!-- Load Three.js -->
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/99/three.min.js"></script>
+		<script type="importmap">
+			{
+				"imports": {
+					"three": "https://unpkg.com/three@0.157.0/build/three.module.js",
+					"three/addons/": "https://unpkg.com/three@0.157.0/examples/jsm/"
+				}
+			}
+		</script>
 		<!-- External Files -->
 		<link rel="stylesheet" href="styles.css">
-		<link rel="icon" type="image/x-icon" href="assets/fire.png">
+		<link rel="icon" type="image/x-icon" href="static/fire.png">
 		<!-- Meta Tags -->
 		<meta charset="UTF-8">
 		<meta name="description" content="A site that tells you to go to Hell (Michigan)">
@@ -53,7 +60,7 @@
 			<div id="error-template" class="message error"></div>
 		</div>
 		
-		<script type="text/javascript" src="script.js"></script>
+		<script type="module" src="script.js"></script>
 	</body>
 </html>
 

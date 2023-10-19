@@ -1,12 +1,12 @@
+import * as THREE from 'three';
+import WebGL from 'three/addons/capabilities/WebGL.js';
+
 window.addEventListener("load", () => {
+
 	// Constants
 	const hell_latitude = 42.4338 * (Math.PI / 180);
 	const hell_longitude = -83.9845 * (Math.PI / 180);
 	const hell_altitude = 270;
-
-	// WebGL
-	//const canvas = document.getElementById('arrow');
-	//const webgl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
 
 	// Variables for current device data
 	var latitude;
@@ -80,13 +80,9 @@ window.addEventListener("load", () => {
 
 	// Draw the arrow on the canvas
 	function displayArrow() {
-		//if (!webgl || !(webgl instanceof WebGLRenderingContext)) {
-		//	displayError("webgl-no-support", "Please enable WebGL or use a browser which supports it.");
-		//	return;
-		//	};
 		const hdn = yaw || heading;
 
-		if (!hdn && !isIOS) {
+		if (!hdn && !DeviceOrientationEvent.requestOrientationPermission) {
 			displayError("compass-no-support", "Your device does not support getting compass headings.");
 		} else {
 			displayError("compass-no-support");
@@ -146,6 +142,12 @@ window.addEventListener("load", () => {
 	} else {
 		window.addEventListener("deviceorientationabsolute", handleOrientation, true);
 	}
+
+	// Check for WebGL support
+	if (!WebGL.isWebGLAvailable()) {
+		displayError("webgl-no-support", "Please enable WebGL or use a browser that supports it.");
+		return;
+	};
 
 	// Check for geolocation support
 	if ("geolocation" in navigator) {

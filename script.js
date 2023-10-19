@@ -156,13 +156,14 @@ window.addEventListener("load", () => {
 	// Load the arrow
 	loader.load('static/arrow.glb', function (gltf) {
 		let model = gltf.scene;
-		scene.add(model);
 
 		model.scale.set(0.1, 0.1, 0.1);
 
 		// model.rotation.x = hdn;
 		// model.rotation.y = pitch;
 		// model.rotation.z = roll;
+		
+		scene.add(model);
 		
 		// Make the render size a square
 		const size = Math.min(document.getElementById("center").clientWidth, document.getElementById("center").clientHeight);

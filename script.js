@@ -178,9 +178,9 @@ window.addEventListener("load", () => {
 		loader.load('static/arrow.gltf', function (gltf) {
 			scene.add(gltf.scene);
 
-			gltf.rotation.x = hdn;
-			gltf.rotation.y = pitch;
-			gltf.rotation.z = roll;
+			gltf.asset.rotation.x = hdn;
+			gltf.asset.rotation.y = pitch;
+			gltf.asset.rotation.z = roll;
 		}, undefined, function (error) {
 			console.error(error);
 		});

@@ -173,15 +173,10 @@ model.traverse((o) => {
   if (o.isMesh) o.material = newMaterial;
 });
 
-		model.scale.set(7.5, 7.5, 7.5);
+		model.scale.set(4, 4, 4);
 
-		// TODO Rotate model with thing
-		//model.rotation.y = Math.PI;
-		//model.rotation.x = hdn;
-		// model.rotation.y = pitch;
-		// model.rotation.z = roll;
-		
 		scene.add(model);
+				model.rotation.y = -Math.PI / 2;
 		
 		// Make the render size a square
 		const size = Math.min(document.getElementById("center").clientWidth, document.getElementById("center").clientHeight);
@@ -202,11 +197,11 @@ model.traverse((o) => {
 				displayError("compass-no-support");
 			}
 
-			//if (latitude != null && longitude != null && hdn != null && pitch != null && yaw != null) {
-			//	console.log("Full range of data.");
-			/*} else*/ if (latitude != null && longitude != null && hdn != null) {
-				console.warning("Only latitude, longitude, and heading.");
-				displayError("not yet implemented", "This feature is not finished yet.");
+			if (latitude != null && longitude != null && hdn != null && pitch != null && yaw != null) {
+				model.rotation.y = -Math.PI / 2;
+			} else if (latitude != null && longitude != null && hdn != null) {
+				console.log("Using 2D compass mode.");
+				// TODO: Implement 2D compass
 			}
 
 			$("#distance").html(`${distance(latitude, longitude).toFixed(2).toLocaleString()}km`);

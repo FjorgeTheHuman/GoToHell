@@ -167,7 +167,7 @@ window.addEventListener("load", () => {
 	// Load the arrow
 	loader.load('static/arrow.gltf', function (gltf) {
 		let model = gltf.scene;
-		model.scale.set(0.4, 0.4, 0.4);
+		model.scale.set(0.3, 0.3, 0.3);
 
 		// Replace model material
 		var newMaterial = new THREE.MeshStandardMaterial({color: 0xff0000});

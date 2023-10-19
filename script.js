@@ -234,17 +234,17 @@ window.addEventListener("load", () => {
 			}
 
 			// Different modes for a device with full sensors and only compass
-			//if (latitude != null && longitude != null && hdn != null && pitch != null && yaw != null) {
-				//model.rotation.x = -pitch;
-				//model.rotation.y = -roll;
-				//model.rotation.z = hdn + bearing;
+			if (latitude != null && longitude != null && hdn != null && pitch != null && yaw != null) {
+				model.rotation.x = -pitch;
+				model.rotation.y = -roll;
+				model.rotation.z = hdn + bearing;
 
 				// TODO: Calculate angle to hell
-			//} else if (latitude != null && longitude != null && hdn != null) {
+			} else if (latitude != null && longitude != null && hdn != null) {
 				model.rotation.x = 0;
 				model.rotation.y = 0;
 				model.rotation.z = hdn + bearing;
-			//}
+			}
 
 			if (Math.abs(bearing - hdn) < (Math.PI / 12)) {
 				if (canVibrate) {

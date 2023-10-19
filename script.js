@@ -146,7 +146,7 @@ window.addEventListener("load", () => {
 
 	// Add some light
 	const light = new THREE.AmbientLight(0x404040); // soft white light
-	scene.add( light );
+	scene.add(light);
 
 	document.getElementById("center").appendChild(renderer.domElement);
 	renderer.domElement.id = "arrow";
@@ -183,17 +183,19 @@ window.addEventListener("load", () => {
 			const model = gltf.scene;
 			scene.add(model);
 
-			model.scale.set(0.001, 0.001, 0.001);
+			model.scale.set(1000, 1000, 1000);
 
-			model.rotation.x = hdn;
-			model.rotation.y = pitch;
-			model.rotation.z = roll;
+			// model.rotation.x = hdn;
+			// model.rotation.y = pitch;
+			// model.rotation.z = roll;
+			
+			renderer.render(scene, camera);
 		}, undefined, function (error) {
 			console.error(error);
 		});
 
 		// Render the scene
-		renderer.render(scene, camera);
+		//renderer.render(scene, camera);
 	};
 
 	// draw arrow forever

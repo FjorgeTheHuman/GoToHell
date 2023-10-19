@@ -3,6 +3,20 @@ import WebGL from 'three/addons/capabilities/WebGL.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'; // TODO: Remove orbit controls
 
+// Ensuring radians are positive and between 0 and 2pi
+function sRad(rad) {
+	while (rad < 0) {
+		rad += 2 * Math.PI;
+	}
+
+	return rad % (2 * Math.PI);
+}
+
+// Converting degrees to radians
+function degToRad(deg) {
+	return sRad(deg * Math.PI / 180);
+}
+
 const EARTH_RADIUS = 6371;
 
 function calcDistance(lat1, lon1, lat2, lon2) {
@@ -33,8 +47,8 @@ window.addEventListener("load", () => {
 	const canVibrate = ('vibrate' in window.navigator);
 
 	// Constants
-	const hell_latitude = 42.4338 * (Math.PI / 180);
-	const hell_longitude = -83.9845 * (Math.PI / 180);
+	const hell_latitude = degToRad(42.4338);
+	const hell_longitude = degToRad(-83.9845);
 	const hell_altitude = 270;
 
 	// Variables for current device data
@@ -66,9 +80,9 @@ window.addEventListener("load", () => {
 
 	// Save the location of the device
 	function handleGeoPosition(position) {
-		latitude = position.coords.latitude * Math.PI / 180;
-		longitude = position.coords.longitude * Math.PI / 180;
-		heading = position.coords.heading * Math.PI / 180;
+		latitude = degToRad(position.coords.latitude);
+		longitude = degToRad(position.coords.longitude);
+		heading = degToRad(position.coords.heading);
 
 		displayError("geo-no-perm");
 		displayError("geo-error");
@@ -98,9 +112,9 @@ window.addEventListener("load", () => {
 			console.warn("Using webkit-specific compass heading.");
 		};
 
-		pitch = orientation.beta * Math.PI / 180;
-		roll = orientation.gamma * Math.PI / 180 / 2;
-		yaw *= Math.PI / 180;
+		pitch = degToRad(orientation.beta);
+		roll = degToRad(orientation.gamma);
+		yaw = degToRad(yaw);
 	};
 
 	// Vibrate morse code for "go to hell"
@@ -180,6 +194,7 @@ window.addEventListener("load", () => {
 	const alight = new THREE.AmbientLight(0x8c8c8c);
 	scene.add(alight);
 
+	// Position camera away from arrow
 	camera.position.z = 5;
 
 	document.getElementById("center").appendChild(renderer.domElement);
@@ -231,7 +246,7 @@ window.addEventListener("load", () => {
 
 			// Different modes for a device with full sensors and only compass
 			if (latitude != null && longitude != null && hdn != null && pitch != null && roll != null) {
-				const rot = new THREE.Euler(hdn + bearing, -pitch, -roll, 'ZXY');
+				const rot = new THREE.Euler(-roll, -pitch, hdn + bearing, 'ZYX');
 				console.log("rotation: " + rot.toArray());
 				model.setRotationFromEuler(rot);
 

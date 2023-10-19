@@ -3,6 +3,32 @@ import WebGL from 'three/addons/capabilities/WebGL.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'; // TODO: Remove orbit controls
 
+const EARTH_RADIUS = 6371;
+
+function calcDistance(lat1, lon1, lat2, lon2) {
+	// Haversign formula
+	// https://en.wikipedia.org/wiki/Haversine_formula
+	const dlon = lon2 - lon1;
+	const dlat = lat2 - lat1;
+
+	const a = Math.pow(Math.sin(dlat / 2), 2) + Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin(dlon / 2), 2);
+
+	return EARTH_RADIUS * 2 * Math.asin(Math.sqrt(a));
+};
+
+function calcBearing(lat1, lon1, lat2, lon2) {
+	// Spherical law of cosines
+	// https://www.askamathematician.com/2018/07/q-given-two-points-on-the-globe-how-do-you-figure-out-the-direction-and-distance-to-each-other
+	const distance = calcDistance(lat1, lon1, lat2, lon2);
+
+	const theta_1 = Math.PI / 2 - lat1;
+	const theta_2 = Math.PI / 2 - lat2;
+
+	const phi = distance / EARTH_RADIUS;
+	
+	return Math.acos((Math.cos(theta_2) - Math.cos(theta_1) * Math.cos(phi)) / (Math.sin(theta_1) * Math.sin(phi)));
+};
+
 window.addEventListener("load", () => {
 
 	// Constants
@@ -42,9 +68,9 @@ window.addEventListener("load", () => {
 
 	// Save the location of the device
 	function handleGeoPosition(position) {
-		latitude = position.coords.latitude;
-		longitude = position.coords.longitude;
-		heading = position.coords.heading * Math.PI / 2;
+		latitude = position.coords.latitude * Math.PI / 180;
+		longitude = position.coords.longitude * Math.PI / 180;
+		heading = position.coords.heading * Math.PI / 180;
 
 		displayError("geo-no-perm");
 		displayError("geo-error");
@@ -82,23 +108,19 @@ window.addEventListener("load", () => {
 	};
 
 	// Vibrate morse code for "go to hell"
+	var vibrate_lock = false;
 	function vibrate() {
-		window.navigator.vibrate([300, 100, 300, 100, 100, 300, 300, 100, 300, 100, 300, 700, 300, 300, 300, 100, 300, 100, 300, 700, 100, 100, 100, 100, 100, 100, 100, 300, 100, 300, 100, 100, 300, 100, 100, 100, 100, 300, 100, 100, 300, 100, 100, 100, 100, 100, 700]);
+		if (vibrate_lock) {
+			return;
+		}
+
+		const pattern = [300, 100, 300, 100, 100, 300, 300, 100, 300, 100, 300, 700, 300, 300, 300, 100, 300, 100, 300, 700, 100, 100, 100, 100, 100, 100, 100, 300, 100, 300, 100, 100, 300, 100, 100, 100, 100, 300, 100, 100, 300, 100, 100, 100, 100, 100, 700];
+
+		vibrate_lock = true;
+		setTimeout(() => {vibrate_lock = false}, pattern.reduce((a, b) => a + b, 0))
+		window.navigator.vibrate(pattern);
 	};
 
-	function distance(lat, lon) {
-		// Haversign formula
-		// https://en.wikipedia.org/wiki/Haversine_formula
-		const lat_r = lat * (Math.PI / 180);
-		const lon_r = lon * (Math.PI / 180);
-
-		const dlon = hell_longitude - lon_r;
-		const dlat = hell_latitude - lat_r;
-
-		const a = Math.pow(Math.sin(dlat / 2), 2) + Math.cos(lat_r) * Math.cos(hell_latitude) * Math.pow(Math.sin(dlon / 2), 2);
-
-		return 6371 * 2 * Math.asin(Math.sqrt(a));
-	};
 
 	// Get orientation
 	if (DeviceOrientationEvent.requestPermission) {
@@ -192,6 +214,10 @@ window.addEventListener("load", () => {
 			// Call function every frame
 			requestAnimationFrame(displayArrow);
 
+			// Get distance between user and hell
+			const distance = calcDistance(latitude, longitude, hell_latitude, hell_longitude);
+			const bearing = calcBearing(latitude, longitude, hell_latitude, hell_longitude);
+
 			// Get compass heading
 			const hdn = yaw || heading;
 
@@ -209,12 +235,19 @@ window.addEventListener("load", () => {
 				model.rotation.z = hdn;
 
 				// TODO: Calculate angle to hell
+				model.rotation.z += bearing;
 			} else if (latitude != null && longitude != null && hdn != null) {
 				// TODO: Implement 2D compass
 			}
 
-			// Set the distance between user location and Hell
-			$("#distance").html(`${distance(latitude, longitude).toFixed(2).toLocaleString()}km`);
+			if (Math.abs(bearing - hdn) < (Math.PI / 12)) {
+				vibrate();
+			} else {
+				window.navigator.vibrate(0);
+			}
+
+			// Display the distance between user location and Hell
+			$("#distance").html(`${distance.toFixed(2).toLocaleString()}km`);
 
 			controls.update()
 

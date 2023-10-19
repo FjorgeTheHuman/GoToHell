@@ -145,7 +145,7 @@ window.addEventListener("load", () => {
 	const loader = new GLTFLoader();
 
 	// Add some light
-	const light = new THREE.AmbientLight(0x404040); // soft white light
+	const light = new THREE.AmbientLight(0xffffff);
 	scene.add(light);
 
 	document.getElementById("center").appendChild(renderer.domElement);
@@ -154,7 +154,7 @@ window.addEventListener("load", () => {
 	camera.position.z = 3;
 
 	// Load the arrow
-	loader.load('static/arrow.gltf', function (gltf) {
+	loader.load('static/arrow.glb', function (gltf) {
 		let model = gltf.scene;
 		scene.add(model);
 

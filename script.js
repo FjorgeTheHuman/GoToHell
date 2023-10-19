@@ -176,7 +176,6 @@ model.traverse((o) => {
 		model.scale.set(7.5, 7.5, 7.5);
 
 		// TODO Rotate model with thing
-		model.rotation.z = Math.PI / 2;
 		model.rotation.y = Math.PI;
 		//model.rotation.x = hdn;
 		// model.rotation.y = pitch;

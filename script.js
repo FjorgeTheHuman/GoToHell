@@ -82,7 +82,7 @@ window.addEventListener("load", () => {
 	function displayArrow() {
 		const hdn = yaw || heading;
 
-		if (!hdn && !DeviceOrientationEvent.requestOrientationPermission) {
+		if (!hdn && !DeviceOrientationEvent.requestPermission) {
 			displayError("compass-no-support", "Your device does not support getting compass headings.");
 		} else {
 			displayError("compass-no-support");
@@ -117,8 +117,15 @@ window.addEventListener("load", () => {
 		return 6371 * 2 * Math.asin(Math.sqrt(a));
 	};
 
+	// Lock screen to portrait mode
+	screen.orientation.lock("portrait-primary").catch((error) => {
+		if (error instanceOf SecurityError) {
+			console.warn("Cannot lock orientation due to security settings.");
+		};
+	});
+
 	// Get orientation
-	if (DeviceOrientationEvent.requestPermission) {
+	if (DeviceOrientationEvent.requestPermission && !DeviceOrientationEvent.requestPermission()) {
 		console.warn("Requesting permission for device orientation.")
 
 		function requestOrientationPermission() {

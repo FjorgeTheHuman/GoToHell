@@ -32,13 +32,13 @@ function calcBearing(lat1, lon1, lat2, lon2) {
 window.addEventListener("load", () => {
 	const canVibrate = ('vibrate' in window.navigator);
 
-	const fire = new Audio('static/fire.mp3');
-	fire.addEventListener('loadeddata', () => {
-		fire.loop = false;
-		fire.controls = false;
-		fire.defaultMuted = false;
-		fire.muted = false;
-	})
+	const audioContext = new AudioContext();
+
+	const fire_el = new Audio('static/fire.mp3');
+	const fire = audioContext.createMediaElementSource(fire_el);
+	fire.connect(audioContext.destination);
+	fire.loop = true;
+
 	// Constants
 	const hell_latitude = 42.4338 * (Math.PI / 180);
 	const hell_longitude = -83.9845 * (Math.PI / 180);
@@ -135,7 +135,7 @@ window.addEventListener("load", () => {
 		console.warn("Requesting permission for device orientation.")
 
 		function requestOrientationPermission() {
-			fire.play();
+			fire.start();
 
 			DeviceOrientationEvent.requestPermission()
 			.then((response) => {
@@ -147,7 +147,7 @@ window.addEventListener("load", () => {
 				} else {
 					displayError("compass-no-perm", "Please allow getting device orientation.");
 
-					fire.pause();
+					fire.stop();
 				}
 			}).catch(() => {
 				displayError("compass-no-support", "Your device does not support getting compass headings.")
@@ -158,6 +158,8 @@ window.addEventListener("load", () => {
 		request.addEventListener("click", requestOrientationPermission);
 		request.style = {};
 	} else {
+		fire.start();
+
 		window.addEventListener("deviceorientationabsolute", handleOrientation, true);
 	}
 

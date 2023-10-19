@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import WebGL from 'three/addons/capabilities/WebGL.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js'; // TODO: Remove orbit controls
 
 window.addEventListener("load", () => {
 
@@ -168,15 +168,13 @@ scene.add(light)
 	loader.load('static/arrow.gltf', function (gltf) {
 		let model = gltf.scene;
 
+		// Replace model material
 		var newMaterial = new THREE.MeshStandardMaterial({color: 0xff0000});
-model.traverse((o) => {
-  if (o.isMesh) o.material = newMaterial;
-});
-
-		model.scale.set(2, 2, 2);
+		model.traverse((o) => {
+			if (o.isMesh) o.material = newMaterial;
+		});
 
 		scene.add(model);
-				model.rotation.x = -Math.PI / 2;
 		
 		// Make the render size a square
 		const size = Math.min(document.getElementById("center").clientWidth, document.getElementById("center").clientHeight);
@@ -198,9 +196,10 @@ model.traverse((o) => {
 			}
 
 			if (latitude != null && longitude != null && hdn != null && pitch != null && yaw != null) {
-				model.rotation.y = -Math.PI / 2;
+				model.rotation.x = -Math.PI / 2;
+
+				// TODO: Implement 3D compass
 			} else if (latitude != null && longitude != null && hdn != null) {
-				console.log("Using 2D compass mode.");
 				// TODO: Implement 2D compass
 			}
 

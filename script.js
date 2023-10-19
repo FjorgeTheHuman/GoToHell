@@ -176,8 +176,8 @@ window.addEventListener("load", () => {
 		scene.add(model);
 
 		// Add a light to the model
-		const light = new THREE.PointLight(0xa6a6a6, 10000);
-		light.position.set(0, 0, 7.5);
+		const light = new THREE.PointLight(0xa6a6a6, 10);
+		light.position.set(0, 1, 7.5);
 		model.add(light);
 		
 		// Make the render size a square

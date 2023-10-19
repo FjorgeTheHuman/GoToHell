@@ -117,15 +117,8 @@ window.addEventListener("load", () => {
 		return 6371 * 2 * Math.asin(Math.sqrt(a));
 	};
 
-	// Lock screen to portrait mode
-	screen.orientation.lock("portrait-primary").catch((error) => {
-		if (error instanceOf SecurityError) {
-			console.warn("Cannot lock orientation due to security settings.");
-		};
-	});
-
 	// Get orientation
-	if (DeviceOrientationEvent.requestPermission) {
+	if (DeviceOrientationEvent.requestPermission && !DeviceOrientationEvent.requestPermission()) {
 		console.warn("Requesting permission for device orientation.")
 
 		function requestOrientationPermission() {

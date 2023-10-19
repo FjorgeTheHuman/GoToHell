@@ -135,14 +135,19 @@ window.addEventListener("load", () => {
 		console.warn("Requesting permission for device orientation.")
 
 		function requestOrientationPermission() {
+			fire.play();
+
 			DeviceOrientationEvent.requestPermission()
 			.then((response) => {
 				if (response === "granted") {
+
 					window.addEventListener("deviceorientation", handleOrientation, true);
 					
 					$('#message-ask-orient-perm').attr({style: "display: none;"});
 				} else {
 					displayError("compass-no-perm", "Please allow getting device orientation.");
+
+					fire.pause();
 				}
 			}).catch(() => {
 				displayError("compass-no-support", "Your device does not support getting compass headings.")

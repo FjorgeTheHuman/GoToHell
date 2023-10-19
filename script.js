@@ -173,10 +173,10 @@ model.traverse((o) => {
   if (o.isMesh) o.material = newMaterial;
 });
 
-		model.scale.set(4, 4, 4);
+		model.scale.set(2, 2, 2);
 
 		scene.add(model);
-				model.rotation.y = -Math.PI / 2;
+				model.rotation.x = -Math.PI / 2;
 		
 		// Make the render size a square
 		const size = Math.min(document.getElementById("center").clientWidth, document.getElementById("center").clientHeight);

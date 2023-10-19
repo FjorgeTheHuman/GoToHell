@@ -96,6 +96,9 @@ window.addEventListener("load", () => {
 		}
 
 		$("#distance").html(`${distance(latitude, longitude).toFixed(2).toLocaleString()}km`);
+
+		const size = Math.min(document.getElementById("arrow").innerWidth, document.getElementById("arrow").innerHeight);
+		renderer.setSize(size, size);	
 	};
 
 	// Vibrate morse code for "go to hell"
@@ -156,6 +159,23 @@ window.addEventListener("load", () => {
 	} else {
 		displayError("geo-no-support", "Your device does not support geolocation.");
 	}
+
+	// Create the required three.js objects
+	const scene = new THREE.Scene();
+	const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+	const renderer = new THREE.WebGLRenderer();
+
+	document.getElementById("center").appendChild(renderer.domElement);
+	domElement.id = "arrow";
+
+	// TODO: remove
+	// temporary cube for three.js test
+	const geometry = new THREE.BoxGeometry( 1, 1, 1 );
+	const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+	const cube = new THREE.Mesh( geometry, material );
+	scene.add( cube );
+
+	camera.position.z = 5;
 
 	// Async infinite loop to draw arrow
 	async function loop() {

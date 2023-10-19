@@ -168,7 +168,10 @@ scene.add(light)
 	loader.load('static/arrow.glb', function (gltf) {
 		let model = gltf.scene;
 
-		model.scale.set(0.1, 0.1, 0.1);
+		var newMaterial = new THREE.MeshStandardMaterial({color: 0xff0000});
+model.traverse((o) => {
+  if (o.isMesh) o.material = newMaterial;
+});
 
 		// model.rotation.x = hdn;
 		// model.rotation.y = pitch;

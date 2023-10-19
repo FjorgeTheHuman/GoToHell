@@ -1,13 +1,53 @@
 import * as THREE from 'three';
 import WebGL from 'three/addons/capabilities/WebGL.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js'; // TODO: Remove orbit controls
+
+// Ensuring radians are positive and between 0 and 2pi
+function sRad(rad) {
+	while (rad < 0) {
+		rad += 2 * Math.PI;
+	}
+
+	return rad % (2 * Math.PI);
+}
+
+// Converting degrees to radians
+function degToRad(deg) {
+	return sRad(deg * Math.PI / 180);
+}
+
+const EARTH_RADIUS = 6371;
+
+function calcDistance(lat1, lon1, lat2, lon2) {
+	// Haversign formula
+	// https://en.wikipedia.org/wiki/Haversine_formula
+	const dlon = lon2 - lon1;
+	const dlat = lat2 - lat1;
+
+	const a = Math.pow(Math.sin(dlat / 2), 2) + Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin(dlon / 2), 2);
+
+	return EARTH_RADIUS * 2 * Math.asin(Math.sqrt(a));
+};
+
+function calcBearing(lat1, lon1, lat2, lon2) {
+	// Spherical law of cosines
+	// https://www.askamathematician.com/2018/07/q-given-two-points-on-the-globe-how-do-you-figure-out-the-direction-and-distance-to-each-other
+	const distance = calcDistance(lat1, lon1, lat2, lon2);
+
+	const theta_1 = Math.PI / 2 - lat1;
+	const theta_2 = Math.PI / 2 - lat2;
+
+	const phi = distance / EARTH_RADIUS;
+	
+	return Math.acos((Math.cos(theta_2) - Math.cos(theta_1) * Math.cos(phi)) / (Math.sin(theta_1) * Math.sin(phi)));
+};
 
 window.addEventListener("load", () => {
+	const canVibrate = ('vibrate' in window.navigator);
 
 	// Constants
-	const hell_latitude = 42.4338 * (Math.PI / 180);
-	const hell_longitude = -83.9845 * (Math.PI / 180);
+	const hell_latitude = degToRad(42.4338);
+	const hell_longitude = degToRad(-83.9845);
 	const hell_altitude = 270;
 
 	// Variables for current device data
@@ -17,9 +57,6 @@ window.addEventListener("load", () => {
 	var yaw;
 	var pitch;
 	var roll;
-
-	// Wait function for infinite loop
-	function wait(ms) { return new Promise(res => setTimeout(res, ms)); };
 
 	// Display errors as HTML
 	function displayError(id, message = null, timeout = 0) {
@@ -42,9 +79,9 @@ window.addEventListener("load", () => {
 
 	// Save the location of the device
 	function handleGeoPosition(position) {
-		latitude = position.coords.latitude;
-		longitude = position.coords.longitude;
-		heading = position.coords.heading
+		latitude = degToRad(position.coords.latitude);
+		longitude = degToRad(position.coords.longitude);
+		heading = degToRad(position.coords.heading);
 
 		displayError("geo-no-perm");
 		displayError("geo-error");
@@ -67,46 +104,45 @@ window.addEventListener("load", () => {
 	};
 
 	// Save device orientation
+	var print_orientation_info = true;
 	function handleOrientation(orientation) {
-		if (orientation.webkitCompassHeading) {
-			yaw = orientation.webkitCompassHeading;
-			
-			console.warn("Using webkit-specific compass heading.");
-		} else if (orientation.alpha) {
-			yaw = orientation.alpha;
+		yaw = orientation.webkitCompassHeading || orientation.alpha;
+
+		if (print_orientation_info && orientation.webkitCompassHeading) {
+			print_orientation_info = false;
+
+			console.info("Using webkit-specific compass heading.");
 		};
 
-		pitch = orientation.beta;
-		roll = orientation.gamma;
+		pitch = degToRad(orientation.beta);
+		roll = degToRad(orientation.gamma);
+		yaw = degToRad(yaw);
 	};
 
 	// Vibrate morse code for "go to hell"
+	var vibrate_lock = false;
 	function vibrate() {
-		window.navigator.vibrate([300, 100, 300, 100, 100, 300, 300, 100, 300, 100, 300, 700, 300, 300, 300, 100, 300, 100, 300, 700, 100, 100, 100, 100, 100, 100, 100, 300, 100, 300, 100, 100, 300, 100, 100, 100, 100, 300, 100, 100, 300, 100, 100, 100, 100, 100, 700]);
+		if (vibrate_lock) {
+			return;
+		}
+
+		const pattern = [300, 100, 300, 100, 100, 300, 300, 100, 300, 100, 300, 700, 300, 300, 300, 100, 300, 100, 300, 700, 100, 100, 100, 100, 100, 100, 100, 300, 100, 300, 100, 100, 300, 100, 100, 100, 100, 300, 100, 100, 300, 100, 100, 100, 100, 100, 700];
+
+		vibrate_lock = true;
+		setTimeout(() => {vibrate_lock = false}, pattern.reduce((a, b) => a + b, 0))
+		window.navigator.vibrate(pattern);
 	};
 
-	function distance(lat, lon) {
-		// Haversign formula
-		// https://en.wikipedia.org/wiki/Haversine_formula
-		const lat_r = lat * (Math.PI / 180);
-		const lon_r = lon * (Math.PI / 180);
-
-		const dlon = hell_longitude - lon_r;
-		const dlat = hell_latitude - lat_r;
-
-		const a = Math.pow(Math.sin(dlat / 2), 2) + Math.cos(lat_r) * Math.cos(hell_latitude) * Math.pow(Math.sin(dlon / 2), 2);
-
-		return 6371 * 2 * Math.asin(Math.sqrt(a));
-	};
 
 	// Get orientation
 	if (DeviceOrientationEvent.requestPermission) {
-		console.warn("Requesting permission for device orientation.")
+		console.info("Requesting permission for device orientation using Safari API.")
 
 		function requestOrientationPermission() {
 			DeviceOrientationEvent.requestPermission()
 			.then((response) => {
 				if (response === "granted") {
+
 					window.addEventListener("deviceorientation", handleOrientation, true);
 					
 					$('#message-ask-orient-perm').attr({style: "display: none;"});
@@ -139,6 +175,11 @@ window.addEventListener("load", () => {
 		displayError("geo-no-support", "Your device does not support geolocation.");
 	}
 
+	// Lock orientation to portrait if possible
+	if ('lock' in screen.orientation) {
+		screen.orientation.lock('portrait-primary');
+	}
+
 	// Create the required three.js objects
 	const scene = new THREE.Scene();
 	const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
@@ -147,19 +188,13 @@ window.addEventListener("load", () => {
 	renderer.outputColorSpace = THREE.SRGBColorSpace;
 	const loader = new GLTFLoader();
 
-	const controls = new OrbitControls(camera, renderer.domElement)
-	controls.enableDamping = true
-
 	scene.add(new THREE.AxesHelper(5))
 
-	const light = new THREE.PointLight(0xffffff, 1000)
-	light.position.set(2.5, 7.5, 15)
-	scene.add(light)
-
 	// Add some light
-	const ilight = new THREE.AmbientLight(0xffffff);
-	scene.add(ilight);
+	const alight = new THREE.AmbientLight(0x8c8c8c);
+	scene.add(alight);
 
+	// Position camera away from arrow
 	camera.position.z = 5;
 
 	document.getElementById("center").appendChild(renderer.domElement);
@@ -178,6 +213,11 @@ window.addEventListener("load", () => {
 
 		scene.add(model);
 
+		// Add a light to the model
+		const light = new THREE.PointLight(0xa6a6a6, 10);
+		light.position.set(0, 1, 7.5);
+		model.add(light);
+		
 		// Make the render size a square
 		const size = Math.min(document.getElementById("center").clientWidth, document.getElementById("center").clientHeight);
 		renderer.setSize(size, size);
@@ -187,26 +227,72 @@ window.addEventListener("load", () => {
 
 		// Draw the arrow on the canvas
 		function displayArrow() {
+			// Call function every frame
 			requestAnimationFrame(displayArrow);
 
+			// Get distance between user and hell
+			const distance = calcDistance(latitude, longitude, hell_latitude, hell_longitude);
+			const bearing = calcBearing(latitude, longitude, hell_latitude, hell_longitude);
+
+			// Get compass heading
 			const hdn = yaw || heading;
 
+			// Display error if the device has no compass
 			if (!hdn && !DeviceOrientationEvent.requestPermission) {
 				displayError("compass-no-support", "Your device does not support getting compass headings.");
 			} else {
 				displayError("compass-no-support");
 			}
 
-			if (latitude != null && longitude != null && hdn != null && pitch != null && yaw != null) {
-				model.rotation.x = -Math.PI / 2;
+			// Different modes for a device with full sensors and only compass
+			if (latitude != null && longitude != null && hdn != null && pitch != null && roll != null) {
+				var pitch_c = -pitch;
+				var roll_c = -roll;
+				var yaw_c = hdn + bearing;
 
-				// TODO: Implement 3D compass
+				if (pitch > Math.PI / 2 && pitch < 3 * Math.PI / 2) {
+					roll_c = roll;
+				}
+
+				if (pitch > Math.PI) {
+					pitch_c = Math.PI - pitch;
+					yaw_c = yaw_c + Math.PI;
+					roll_c = -roll_c + Math.PI;
+				}
+
+				console.debug(pitch);
+				if (pitch >= (3 * Math.PI / 4) && pitch < (5 * Math.PI / 4)) {
+					console.debug("Yaw inverted");
+					yaw_c = yaw_c + Math.PI;
+				}
+
+				// TODO: Reduce roll sensitivity as pitch gets closer to 90 deg
+
+				// Z points up, X points right, Y points forwards
+				// That means Z is yaw, X is pitch, Y is roll
+				const rot = new THREE.Euler(sRad(pitch_c), sRad(roll_c), sRad(yaw_c), 'XYZ');
+				console.debug("rotation: " + rot.toArray());
+				model.setRotationFromEuler(rot);
+
+				// TODO: Calculate angle to hell
 			} else if (latitude != null && longitude != null && hdn != null) {
-				// TODO: Implement 2D compass
+				model.rotation.x = 0;
+				model.rotation.y = 0;
+				model.rotation.z = hdn + bearing;
 			}
 
-			$("#distance").html(`${distance(latitude, longitude).toFixed(2).toLocaleString()}km`);
-controls.update()
+			// Vibrate if possible and arrow is close enough
+			if (Math.abs(bearing - hdn) < (Math.PI / 18)) {
+				if (canVibrate) {
+					vibrate();
+				}
+			} else if (canVibrate) {
+				window.navigator.vibrate(0);
+			}
+
+			// Display the distance between user location and Hell
+			$("#distance").html(`${distance.toFixed(2).toLocaleString()}km`);
+
 			// Make the render size a square
 			const size = Math.min(document.getElementById("center").clientWidth, document.getElementById("center").clientHeight);
 			renderer.setSize(size, size);
@@ -215,7 +301,7 @@ controls.update()
 			renderer.render(scene, camera);
 		};
 
-		// draw arrow forever
+		// Draw the arrow
 		displayArrow();
 	}, undefined, function (error) {
 		console.error(error);

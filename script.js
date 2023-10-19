@@ -144,6 +144,10 @@ window.addEventListener("load", () => {
 	const renderer = new THREE.WebGLRenderer();
 	const loader = new GLTFLoader();
 
+	// Add some light
+	const light = new THREE.AmbientLight(0x404040); // soft white light
+	scene.add( light );
+
 	document.getElementById("center").appendChild(renderer.domElement);
 	renderer.domElement.id = "arrow";
 
@@ -178,6 +182,8 @@ window.addEventListener("load", () => {
 		loader.load('static/arrow.gltf', function (gltf) {
 			const model = gltf.scene;
 			scene.add(model);
+
+			model.scale.set(0.001, 0.001, 0.001);
 
 			model.rotation.x = hdn;
 			model.rotation.y = pitch;

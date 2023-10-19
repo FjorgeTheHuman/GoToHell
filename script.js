@@ -1,5 +1,7 @@
 import * as THREE from 'three';
 import WebGL from 'three/addons/capabilities/WebGL.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js'; // TODO: Remove orbit controls
 
 window.addEventListener("load", () => {
 
@@ -98,7 +100,7 @@ window.addEventListener("load", () => {
 	};
 
 	// Get orientation
-	if (DeviceOrientationEvent.requestPermission && !DeviceOrientationEvent.requestPermission()) {
+	if (DeviceOrientationEvent.requestPermission) {
 		console.warn("Requesting permission for device orientation.")
 
 		function requestOrientationPermission() {
@@ -140,56 +142,84 @@ window.addEventListener("load", () => {
 	// Create the required three.js objects
 	const scene = new THREE.Scene();
 	const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
-	const renderer = new THREE.WebGLRenderer();
+
+	const renderer = new THREE.WebGLRenderer({ antialias: true });
+	renderer.outputColorSpace = THREE.SRGBColorSpace;
+	const loader = new GLTFLoader();
+
+	const controls = new OrbitControls(camera, renderer.domElement)
+	controls.enableDamping = true
+
+	scene.add(new THREE.AxesHelper(5))
+
+	const light = new THREE.PointLight(0xffffff, 1000)
+	light.position.set(2.5, 7.5, 15)
+	scene.add(light)
+
+	// Add some light
+	const ilight = new THREE.AmbientLight(0xffffff);
+	scene.add(ilight);
+
+	camera.position.z = 5;
 
 	document.getElementById("center").appendChild(renderer.domElement);
 	renderer.domElement.id = "arrow";
 
-	// TODO: remove
-	// temporary cube for three.js test
-	const geometry = new THREE.BoxGeometry( 1, 1, 1 );
-	const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-	const cube = new THREE.Mesh( geometry, material );
-	scene.add( cube );
+	// Load the arrow
+	loader.load('static/arrow.gltf', function (gltf) {
+		let model = gltf.scene;
+		model.scale.set(0.3, 0.3, 0.3);
 
-	camera.position.z = 5;
+		// Replace model material
+		var newMaterial = new THREE.MeshStandardMaterial({color: 0xff0000});
+		model.traverse((o) => {
+			if (o.isMesh) o.material = newMaterial;
+		});
 
-	// Draw the arrow on the canvas
-	function displayArrow() {
-		requestAnimationFrame(displayArrow);
-
-		const hdn = yaw || heading;
-
-		if (!hdn && !DeviceOrientationEvent.requestPermission) {
-			displayError("compass-no-support", "Your device does not support getting compass headings.");
-		} else {
-			displayError("compass-no-support");
-		}
-
-		//if (latitude != null && longitude != null && hdn != null && pitch != null && yaw != null) {
-		//	console.log("Full range of data.");
-		/*} else*/ if (latitude != null && longitude != null && hdn != null) {
-			console.warning("Only latitude, longitude, and heading.");
-			displayError("not yet implemented", "This feature is not finished yet.");
-		}
-
-		$("#distance").html(`${distance(latitude, longitude).toFixed(2).toLocaleString()}km`);
+		scene.add(model);
 
 		// Make the render size a square
 		const size = Math.min(document.getElementById("center").clientWidth, document.getElementById("center").clientHeight);
 		renderer.setSize(size, size);
 
-		// TODO: remove
-		// Temporary cube rotation
-		cube.rotation.x += 0.01;
-		cube.rotation.y += 0.01;
-
 		// Render the scene
 		renderer.render(scene, camera);
-	};
 
-	// draw arrow forever
-	displayArrow();
+		// Draw the arrow on the canvas
+		function displayArrow() {
+			requestAnimationFrame(displayArrow);
+
+			const hdn = yaw || heading;
+
+			if (!hdn && !DeviceOrientationEvent.requestPermission) {
+				displayError("compass-no-support", "Your device does not support getting compass headings.");
+			} else {
+				displayError("compass-no-support");
+			}
+
+			if (latitude != null && longitude != null && hdn != null && pitch != null && yaw != null) {
+				model.rotation.x = -Math.PI / 2;
+
+				// TODO: Implement 3D compass
+			} else if (latitude != null && longitude != null && hdn != null) {
+				// TODO: Implement 2D compass
+			}
+
+			$("#distance").html(`${distance(latitude, longitude).toFixed(2).toLocaleString()}km`);
+controls.update()
+			// Make the render size a square
+			const size = Math.min(document.getElementById("center").clientWidth, document.getElementById("center").clientHeight);
+			renderer.setSize(size, size);
+
+			// Render the scene
+			renderer.render(scene, camera);
+		};
+
+		// draw arrow forever
+		displayArrow();
+	}, undefined, function (error) {
+		console.error(error);
+	});
 });
 
 // vim:ts=2:sw=2:noexpandtab

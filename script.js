@@ -176,11 +176,12 @@ window.addEventListener("load", () => {
 
 		// Load the arrow
 		loader.load('static/arrow.gltf', function (gltf) {
-			scene.add(gltf.scene);
+			const model = gltf.scene;
+			scene.add(model);
 
-			gltf.asset.rotation.x = hdn;
-			gltf.asset.rotation.y = pitch;
-			gltf.asset.rotation.z = roll;
+			model.rotation.x = hdn;
+			model.rotation.y = pitch;
+			model.rotation.z = roll;
 		}, undefined, function (error) {
 			console.error(error);
 		});

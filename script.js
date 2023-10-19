@@ -142,18 +142,18 @@ window.addEventListener("load", () => {
 	// Create the required three.js objects
 	const scene = new THREE.Scene();
 	const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
-	const renderer = new THREE.WebGLRenderer();
+	const renderer = new THREE.WebGLRenderer({ antialias: true });
 	renderer.outputColorSpace = THREE.SRGBColorSpace;
 	const loader = new GLTFLoader();
 
-const controls = new OrbitControls(camera, renderer.domElement)
-controls.enableDamping = true
+	const controls = new OrbitControls(camera, renderer.domElement)
+	controls.enableDamping = true
 
 	scene.add(new THREE.AxesHelper(5))
 
-const light = new THREE.PointLight(0xffffff, 1000)
-light.position.set(2.5, 7.5, 15)
-scene.add(light)
+	const light = new THREE.PointLight(0xffffff, 1000)
+	light.position.set(2.5, 7.5, 15)
+	scene.add(light)
 
 	// Add some light
 	const ilight = new THREE.AmbientLight(0xffffff);
@@ -205,7 +205,9 @@ scene.add(light)
 			}
 
 			$("#distance").html(`${distance(latitude, longitude).toFixed(2).toLocaleString()}km`);
-controls.update()
+
+			controls.update()
+
 			// Make the render size a square
 			const size = Math.min(document.getElementById("center").clientWidth, document.getElementById("center").clientHeight);
 			renderer.setSize(size, size);

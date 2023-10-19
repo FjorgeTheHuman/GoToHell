@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import WebGL from 'three/addons/capabilities/WebGL.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 window.addEventListener("load", () => {
 
@@ -141,18 +142,12 @@ window.addEventListener("load", () => {
 	const scene = new THREE.Scene();
 	const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
 	const renderer = new THREE.WebGLRenderer();
+	const loader = new GLTFLoader();
 
 	document.getElementById("center").appendChild(renderer.domElement);
 	renderer.domElement.id = "arrow";
 
-	// TODO: remove
-	// temporary cube for three.js test
-	const geometry = new THREE.BoxGeometry( 1, 1, 1 );
-	const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-	const cube = new THREE.Mesh( geometry, material );
-	scene.add( cube );
-
-	camera.position.z = 5;
+	camera.position.z = 3;
 
 	// Draw the arrow on the canvas
 	function displayArrow() {
@@ -179,10 +174,16 @@ window.addEventListener("load", () => {
 		const size = Math.min(document.getElementById("center").clientWidth, document.getElementById("center").clientHeight);
 		renderer.setSize(size, size);
 
-		// TODO: remove
-		// Temporary cube rotation
-		cube.rotation.x += 0.01;
-		cube.rotation.y += 0.01;
+		// Load the arrow
+		loader.load('static/arrow.glb', function (gltf) {
+			scene.add(gltf.scene);
+
+			gltf.rotation.x = hdn;
+			gltf.rotation.y = pitch;
+			gltf.rotation.z = roll;
+		}, undefined, function (error) {
+			console.error(error);
+		});
 
 		// Render the scene
 		renderer.render(scene, camera);

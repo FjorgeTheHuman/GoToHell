@@ -103,7 +103,7 @@ window.addEventListener("load", () => {
 		};
 
 		pitch = orientation.beta * Math.PI / 180;
-		roll = orientation.gamma * Math.PI / 180;
+		roll = orientation.gamma * Math.PI / 180 / 2;
 		yaw *= Math.PI / 180;
 	};
 

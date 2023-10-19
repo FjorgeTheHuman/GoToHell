@@ -159,6 +159,8 @@ scene.add(light)
 	const ilight = new THREE.AmbientLight(0xffffff);
 	scene.add(ilight);
 
+	camera.position.z = 5;
+
 	document.getElementById("center").appendChild(renderer.domElement);
 	renderer.domElement.id = "arrow";
 
@@ -174,8 +176,8 @@ model.traverse((o) => {
 		model.scale.set(5, 5, 5);
 
 		// TODO Rotate model with thing
-		model.rotation.z = Math.PI;
 		model.rotation.x = Math.PI / 2;
+		model.rotation.z = Math.PI;
 		//model.rotation.x = hdn;
 		// model.rotation.y = pitch;
 		// model.rotation.z = roll;

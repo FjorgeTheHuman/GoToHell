@@ -78,29 +78,6 @@ window.addEventListener("load", () => {
 		roll = orientation.gamma;
 	};
 
-	// Draw the arrow on the canvas
-	function displayArrow() {
-		const hdn = yaw || heading;
-
-		if (!hdn && !DeviceOrientationEvent.requestPermission) {
-			displayError("compass-no-support", "Your device does not support getting compass headings.");
-		} else {
-			displayError("compass-no-support");
-		}
-
-		//if (latitude != null && longitude != null && hdn != null && pitch != null && yaw != null) {
-		//	console.log("Full range of data.");
-		/*} else*/ if (latitude != null && longitude != null && hdn != null) {
-			console.warning("Only latitude, longitude, and heading.");
-			displayError("not yet implemented", "This feature is not finished yet.");
-		}
-
-		$("#distance").html(`${distance(latitude, longitude).toFixed(2).toLocaleString()}km`);
-
-		const size = Math.min(document.getElementById("arrow").innerWidth, document.getElementById("arrow").innerHeight);
-		renderer.setSize(size, size);	
-	};
-
 	// Vibrate morse code for "go to hell"
 	function vibrate() {
 		window.navigator.vibrate([300, 100, 300, 100, 100, 300, 300, 100, 300, 100, 300, 700, 300, 300, 300, 100, 300, 100, 300, 700, 100, 100, 100, 100, 100, 100, 100, 300, 100, 300, 100, 100, 300, 100, 100, 100, 100, 300, 100, 100, 300, 100, 100, 100, 100, 100, 700]);
@@ -177,16 +154,42 @@ window.addEventListener("load", () => {
 
 	camera.position.z = 5;
 
-	// Async infinite loop to draw arrow
-	async function loop() {
-		while (true) {
-			displayArrow();
+	// Draw the arrow on the canvas
+	function displayArrow() {
+		requestAnimationFrame(animate);
 
-			await wait(50);
-		};
+		const hdn = yaw || heading;
+
+		if (!hdn && !DeviceOrientationEvent.requestPermission) {
+			displayError("compass-no-support", "Your device does not support getting compass headings.");
+		} else {
+			displayError("compass-no-support");
+		}
+
+		//if (latitude != null && longitude != null && hdn != null && pitch != null && yaw != null) {
+		//	console.log("Full range of data.");
+		/*} else*/ if (latitude != null && longitude != null && hdn != null) {
+			console.warning("Only latitude, longitude, and heading.");
+			displayError("not yet implemented", "This feature is not finished yet.");
+		}
+
+		$("#distance").html(`${distance(latitude, longitude).toFixed(2).toLocaleString()}km`);
+
+		// Make the render size a square
+		const size = Math.min(document.getElementById("arrow").innerWidth, document.getElementById("arrow").innerHeight);
+		renderer.setSize(size, size);
+
+		// TODO: remove
+		// Temporary cube rotation
+		cube.rotation.x += 0.01;
+		cube.rotation.y += 0.01;
+
+		// Render the scene
+		renderer.render(scene, camera);
 	};
 
-	loop();
+	// draw arrow forever
+	displayArrow();
 });
 
 // vim:ts=2:sw=2:noexpandtab

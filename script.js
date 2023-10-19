@@ -171,11 +171,11 @@ model.traverse((o) => {
   if (o.isMesh) o.material = newMaterial;
 });
 
-		model.scale.set(10, 10, 10);
+		model.scale.set(5, 5, 5);
 
 		// TODO Rotate model with thing
-		model.rotation.x = Math.PI;
-		model.rotation.z = Math.PI / 2;
+		model.rotation.z = Math.PI;
+		model.rotation.x = Math.PI / 2;
 		//model.rotation.x = hdn;
 		// model.rotation.y = pitch;
 		// model.rotation.z = roll;

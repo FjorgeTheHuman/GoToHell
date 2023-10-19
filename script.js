@@ -176,7 +176,7 @@ window.addEventListener("load", () => {
 		$("#distance").html(`${distance(latitude, longitude).toFixed(2).toLocaleString()}km`);
 
 		// Make the render size a square
-		const size = Math.min(document.getElementById("center").innerWidth, document.getElementById("center").innerHeight);
+		const size = Math.min(document.getElementById("center").clientWidth, document.getElementById("center").clientHeight);
 		renderer.setSize(size, size);
 
 		// TODO: remove

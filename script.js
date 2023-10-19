@@ -92,12 +92,10 @@ window.addEventListener("load", () => {
 
 	// Save device orientation
 	function handleOrientation(orientation) {
+		yaw = orientation.webkitCompassHeading || orientation.alpha;
+
 		if (orientation.webkitCompassHeading) {
-			yaw = orientation.webkitCompassHeading;
-			
 			console.warn("Using webkit-specific compass heading.");
-		} else if (orientation.alpha) {
-			yaw = orientation.alpha;
 		};
 
 		pitch = orientation.beta * Math.PI / 180;
@@ -234,9 +232,8 @@ window.addEventListener("load", () => {
 			// Different modes for a device with full sensors and only compass
 			if (latitude != null && longitude != null && hdn != null && pitch != null && roll != null) {
 				const rot = new THREE.Euler(hdn + bearing, -pitch, -roll, 'ZXY');
-				console.log("pre-rotation: " + rot.toArray());
-				model.rotation = rot.reorder('XYZ');
-				console.log("pos-rotation: " + rot.toArray());
+				console.log("rotation: " + rot.toArray());
+				model.setRotationFromEuler(rot);
 
 				/*model.rotation.x = 0;
 				model.rotation.y = 0;

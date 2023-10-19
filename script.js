@@ -76,8 +76,9 @@ window.addEventListener("load", () => {
 			yaw = orientation.alpha;
 		};
 
-		pitch = orientation.beta;
-		roll = orientation.gamma;
+		pitch = orientation.beta * Math.PI / 180;
+		roll = orientation.gamma * Math.PI / 180;
+		yaw *= Math.PI / 180;
 	};
 
 	// Vibrate morse code for "go to hell"

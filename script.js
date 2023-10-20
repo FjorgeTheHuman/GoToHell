@@ -1,7 +1,6 @@
 import * as THREE from 'three';
 import WebGL from 'three/addons/capabilities/WebGL.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js'; // TODO: Remove orbit controls
 
 // Ensuring radians are positive and between 0 and 2pi
 function sRad(rad) {
@@ -105,11 +104,14 @@ window.addEventListener("load", () => {
 	};
 
 	// Save device orientation
+	var print_orientation_info = true;
 	function handleOrientation(orientation) {
 		yaw = orientation.webkitCompassHeading || orientation.alpha;
 
-		if (orientation.webkitCompassHeading) {
-			console.warn("Using webkit-specific compass heading.");
+		if (print_orientation_info && orientation.webkitCompassHeading) {
+			print_orientation_info = false;
+
+			console.info("Using webkit-specific compass heading.");
 		};
 
 		pitch = degToRad(orientation.beta);
@@ -134,7 +136,7 @@ window.addEventListener("load", () => {
 
 	// Get orientation
 	if (DeviceOrientationEvent.requestPermission) {
-		console.warn("Requesting permission for device orientation.")
+		console.info("Requesting permission for device orientation using Safari API.")
 
 		function requestOrientationPermission() {
 			DeviceOrientationEvent.requestPermission()
@@ -184,9 +186,6 @@ window.addEventListener("load", () => {
 	const renderer = new THREE.WebGLRenderer({ antialias: true });
 	renderer.outputColorSpace = THREE.SRGBColorSpace;
 	const loader = new GLTFLoader();
-
-	const controls = new OrbitControls(camera, renderer.domElement)
-	controls.enableDamping = true
 
 	scene.add(new THREE.AxesHelper(5))
 
@@ -246,8 +245,8 @@ window.addEventListener("load", () => {
 
 			// Different modes for a device with full sensors and only compass
 			if (latitude != null && longitude != null && hdn != null && pitch != null && roll != null) {
-				const rot = new THREE.Euler(-pitch, -roll, hdn + bearing, 'ZYX');
-				console.log("rotation: " + rot.toArray());
+				const rot = new THREE.Euler(-pitch, -roll, hdn + bearing, 'XZY');
+				console.debug("rotation: " + rot.toArray());
 				model.setRotationFromEuler(rot);
 
 				/*model.rotation.x = 0;
@@ -283,8 +282,6 @@ window.addEventListener("load", () => {
 
 			// Display the distance between user location and Hell
 			$("#distance").html(`${distance.toFixed(2).toLocaleString()}km`);
-
-			controls.update()
 
 			// Make the render size a square
 			const size = Math.min(document.getElementById("center").clientWidth, document.getElementById("center").clientHeight);

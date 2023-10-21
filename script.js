@@ -249,15 +249,15 @@ window.addEventListener("load", () => {
 				var roll_c = roll;
 				var yaw_c = hdn + bearing;
 
-				if (pitch > Math.PI) {
-					pitch_c = Math.PI - pitch;
-					yaw_c = -yaw_c;
-				}
-
 				if (pitch > Math.PI / 2 && pitch < 3 * Math.PI / 2) {
 					roll_c = -roll;
 				}
 
+				if (pitch > Math.PI) {
+					pitch_c = Math.PI - pitch;
+					roll_c = -roll_c;
+					yaw_c = -yaw_c;
+				}
 
 				// Z points up, X points right, Y points forwards
 				// That means Z is yaw, X is pitch, Y is roll

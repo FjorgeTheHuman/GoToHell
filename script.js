@@ -250,7 +250,7 @@ window.addEventListener("load", () => {
 				var yaw_c = hdn + bearing;
 
 				if (pitch > Math.PI) {
-					pitch_c = pitch - (Math.PI * 2);
+					pitch_c = Math.PI - pitch;
 					yaw_c = -yaw_c;
 				}
 

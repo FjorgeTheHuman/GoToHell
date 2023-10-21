@@ -245,9 +245,23 @@ window.addEventListener("load", () => {
 
 			// Different modes for a device with full sensors and only compass
 			if (latitude != null && longitude != null && hdn != null && pitch != null && roll != null) {
+				var pitch_c = -pitch;
+				var roll_c = roll;
+				var yaw_c = hdn + bearing;
+
+				if (pitch > Math.PI) {
+					pitch_c = pitch - (Math.PI * 2);
+					yaw_c = -yaw_c;
+				}
+
+				if (pitch > Math.PI / 2) {
+					roll_c = -roll;
+				}
+
+
 				// Z points up, X points right, Y points forwards
 				// That means Z is yaw, X is pitch, Y is roll
-				const rot = new THREE.Euler(-pitch, -roll, hdn + bearing, 'XYZ');
+				const rot = new THREE.Euler(sRad(pitch_c), sRad(roll_c), sRad(yaw_c), 'XYZ');
 				console.debug("rotation: " + rot.toArray());
 				model.setRotationFromEuler(rot);
 

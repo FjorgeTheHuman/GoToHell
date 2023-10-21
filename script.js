@@ -256,7 +256,6 @@ window.addEventListener("load", () => {
 				if (pitch > Math.PI) {
 					pitch_c = Math.PI - pitch;
 					roll_c = roll_c + Math.PI;
-					yaw_c = -yaw_c;
 				}
 
 				// Z points up, X points right, Y points forwards

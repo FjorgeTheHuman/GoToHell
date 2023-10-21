@@ -256,8 +256,10 @@ window.addEventListener("load", () => {
 				if (pitch > Math.PI) {
 					pitch_c = Math.PI - pitch;
 					yaw_c = yaw_c + Math.PI;
-					roll_c = roll_c + Math.PI;
+					roll_c = -roll_c + Math.PI;
 				}
+
+				// TODO: Reduce roll sensitivity as pitch gets closer to 90 deg
 
 				// Z points up, X points right, Y points forwards
 				// That means Z is yaw, X is pitch, Y is roll

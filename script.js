@@ -254,7 +254,7 @@ window.addEventListener("load", () => {
 					yaw_c = -yaw_c;
 				}
 
-				if (pitch > Math.PI / 2) {
+				if (pitch > Math.PI / 2 && pitch < 3 * Math.PI / 2) {
 					roll_c = -roll;
 				}
 

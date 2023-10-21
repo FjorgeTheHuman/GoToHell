@@ -247,7 +247,7 @@ window.addEventListener("load", () => {
 			if (latitude != null && longitude != null && hdn != null && pitch != null && roll != null) {
 				// Z points up, X points right, Y points forwards
 				// That means Z is yaw, X is pitch, Y is roll
-				const rot = new THREE.Euler(-pitch, -roll, hdn + bearing, 'ZYX');
+				const rot = new THREE.Euler(-pitch, -roll, hdn + bearing, 'XYZ');
 				console.debug("rotation: " + rot.toArray());
 				model.setRotationFromEuler(rot);
 

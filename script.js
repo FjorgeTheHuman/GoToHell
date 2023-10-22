@@ -261,8 +261,8 @@ window.addEventListener("load", () => {
 
 				pitch_c = sRad(pitch_c);
 
-				if (pitch_c > 5 * Math.PI / 4 && pitch_c < 3 * Math.PI / 2) {
-					yaw_c = yaw_c + Math.PI;
+				if (pitch_c > 7 * Math.PI / 4 && pitch_c < 3 * Math.PI / 2) {
+					//yaw_c = yaw_c + Math.PI;
 				}
 
 				// TODO: Reduce roll sensitivity as pitch gets closer to 90 deg

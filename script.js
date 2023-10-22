@@ -173,7 +173,7 @@ window.addEventListener("load", () => {
 		// Roll and pitch from acceleration
 		// https://stackoverflow.com/a/30195572
 		var Pitch = Math.atan2(-X, Math.sqrt(Math.pow(Y, 2) + Math.pow(Z, 2)));
-		var Roll = Math.atan2(Y, (Math.sign(Z) == 0 ? 1 : Math.sign(Z)) * Math.sqrt(Math.pow(Z, 2) + (0.001 * Math.pow(X, 2))));
+		var Roll = Math.atan2(Y, (Z >= 0 ? 1 : -1) * Math.sqrt(Math.pow(Z, 2) + (0.01 * Math.pow(X, 2))));
 
 		acceleration.roll = Roll;
 		acceleration.pitch = Pitch;
@@ -333,7 +333,7 @@ window.addEventListener("load", () => {
 
 				// NOTE: Z points up, X points right, Y points forwards
 				//       That means Z is yaw, X is pitch, Y is roll
-				const rot = new THREE.Euler(sRad(- acceleration.pitch - verticalAngle), sRad(- acceleration.roll), sRad(yaw_c), 'ZYX');
+				const rot = new THREE.Euler(sRad(- acceleration.pitch - verticalAngle), sRad(- acceleration.roll), sRad(yaw_c), 'XYZ');
 				model.setRotationFromEuler(rot);
 			} else if (rotation.pitch != null && rotation.roll != null) {
 				displayWarning('motion-no-support', 'Due to your device\'s capabilities, there may be a large error in roll when the device is oriented vertically.');

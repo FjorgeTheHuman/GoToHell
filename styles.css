@@ -73,6 +73,10 @@ body {
 	display: none;
 }
 
+#warning-template {
+	display: none;
+}
+
 .message {
 	padding: 10px;
 	margin-top: 10px;
@@ -86,6 +90,15 @@ body {
 
 .error {
 	background: #820014;
+}
+
+.warning {
+	background: #876800;
+}
+
+.warning:hover {
+	cursor: pointer;
+	background: #874d00;
 }
 
 .button {

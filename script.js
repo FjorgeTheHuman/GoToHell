@@ -57,9 +57,18 @@ window.addEventListener("load", () => {
 	var latitude;
 	var longitude;
 	var heading;
-	var yaw;
-	var pitch;
-	var roll;
+	const rotation = {
+		yaw: null,
+		pitch: null,
+		roll: null
+	}
+	const acceleration = {
+		x: null,
+		y: null,
+		z: null,
+		pitch: null,
+		roll: null,
+	}
 
 	// Display errors as HTML
 	function displayError(id, message = null, timeout = 0) {
@@ -74,7 +83,25 @@ window.addEventListener("load", () => {
 				setTimeout(displayError(id), timeout);
 			};
 		} else if (!message && $(`#${id}`).length) {
-			console.warn(`Removing error ${id}.`);
+			console.info(`Removing error ${id}.`);
+
+			$(`#${id}`).remove();
+		};
+	};
+
+	// Display warnings as HTML
+	function displayWarning(id, message = null) {
+		if (message && !$(`#${id}`).length) {
+			console.warn(`code: ${id}\n${message}`);
+
+			$(`#warning-template`).clone().attr({
+				id: id
+			}).html(message).appendTo("#message-box").on("click", () => {
+				console.info(`User dismissed warning ${id}.`);
+				$(this).css('display', 'none');
+			});
+		} else if (!message && $(`#${id}`).length) {
+			console.info(`Removing warning ${id}.`);
 
 			$(`#${id}`).remove();
 		};
@@ -109,7 +136,7 @@ window.addEventListener("load", () => {
 	// Save device orientation
 	var print_orientation_info = true;
 	function handleOrientation(orientation) {
-		yaw = orientation.webkitCompassHeading || orientation.alpha;
+		rotation.yaw = orientation.webkitCompassHeading || orientation.alpha;
 
 		if (print_orientation_info && orientation.webkitCompassHeading) {
 			print_orientation_info = false;
@@ -117,9 +144,39 @@ window.addEventListener("load", () => {
 			console.info("Using webkit-specific compass heading.");
 		};
 
-		pitch = degToRad(orientation.beta);
-		roll = degToRad(orientation.gamma);
-		yaw = degToRad(yaw);
+		rotation.pitch = degToRad(orientation.beta);
+		rotation.roll = degToRad(orientation.gamma);
+		rotation.yaw = degToRad(rotation.yaw);
+	};
+
+	// Save device motion
+	var print_motion_info = true;
+	function handleMotion(motion) {
+		var X = motion.accelerationIncludingGravity.x;
+		var Y = motion.accelerationIncludingGravity.y;
+		var Z = motion.accelerationIncludingGravity.z;
+
+		if (motion.acceleration) {
+			X = X - motion.acceleration.x;
+			Y = Y - motion.acceleration.y;
+			Z = Z - motion.acceleration.z;
+		} else if (print_motion_info) {
+			print_motion_info = false;
+
+			console.info("No acceleration without gravity available. Device acceleration will affect display.");
+		}
+
+		acceleration.x = X;
+		acceleration.y = Y;
+		acceleration.z = Z;
+
+		// Roll and pitch from acceleration
+		// https://stackoverflow.com/a/30195572
+		var Pitch = Math.atan2(-X, Math.sqrt(Math.pow(Y, 2) + Math.pow(Z, 2)));
+		var Roll = Math.atan2(Y, (Math.sign(Z) == 0 ? 1 : Math.sign(Z)) * Math.sqrt(Math.pow(Z, 2) + (0.001 * Math.pow(X, 2))));
+
+		acceleration.roll = Roll;
+		acceleration.pitch = Pitch;
 	};
 
 	// Vibrate morse code for "go to hell"
@@ -136,32 +193,42 @@ window.addEventListener("load", () => {
 		window.navigator.vibrate(pattern);
 	};
 
-
-	// Get orientation
-	if (DeviceOrientationEvent.requestPermission) {
+	// Get accelerometer and orientation data
+	if (DeviceOrientationEvent.requestPermission || DeviceMotionEvent.requestPermission) {
 		console.info("Requesting permission for device orientation using Safari API.")
 
-		function requestOrientationPermission() {
-			DeviceOrientationEvent.requestPermission()
-			.then((response) => {
-				if (response === "granted") {
+		const request = document.getElementById("message-ask-orient-perm");
 
+		function requestMotionPermission() {
+			function handleResponse(response) {
+				if (response === "granted") {
 					window.addEventListener("deviceorientation", handleOrientation, true);
+					window.addEventListener("devicemotion", handleMotion, true);
 					
-					$('#message-ask-orient-perm').attr({style: "display: none;"});
+					request.style.display = "none";
 				} else {
-					displayError("compass-no-perm", "Please allow getting device orientation.");
+					displayError("compass-no-perm", "Please allow getting device orientation and motion.");
+					request.style.display = "none";
 				}
-			}).catch(() => {
-				displayError("compass-no-support", "Your device does not support getting compass headings.")
-			});
+			}
+
+			if (DeviceMotionEvent.requestPermission) {
+				DeviceMotionEvent.requestPermission().then(handleResponse).catch(() => {
+					// No warning yet
+				});
+			};
+			if (DeviceOrientationEvent) {
+				DeviceOrientationEvent.requestPermission().then(handleResponse).catch(() => {
+					// No warning yet
+				});
+			};
 		};
 
-		const request = document.getElementById("message-ask-orient-perm");
-		request.addEventListener("click", requestOrientationPermission);
-		request.style = {};
+		request.addEventListener("click", requestMotionPermission);
+		request.style.display = null;
 	} else {
 		window.addEventListener("deviceorientationabsolute", handleOrientation, true);
+		window.addEventListener("devicemotion", handleMotion, true);
 	}
 
 	// Check for WebGL support
@@ -175,7 +242,8 @@ window.addEventListener("load", () => {
 		navigator.geolocation.getCurrentPosition(handleGeoPosition, handleGeoError);
 		navigator.geolocation.watchPosition(handleGeoPosition, handleGeoError);
 	} else {
-		displayError("geo-no-support", "Your device does not support geolocation.");
+		displayError("geo-no-support", "Your browser does not support geolocation.");
+		return;
 	}
 
 	// Lock orientation to portrait if possible
@@ -238,50 +306,62 @@ window.addEventListener("load", () => {
 			const verticalAngle = calcVerticalAngle(latitude, longitude, hell_latitude, hell_longitude);
 
 			// Get compass heading
-			const hdn = yaw || heading;
+			const hdn = rotation.yaw || heading;
 
 			// Display error if the device has no compass
 			if (!hdn && !DeviceOrientationEvent.requestPermission) {
 				displayError("compass-no-support", "Your device does not support getting compass headings.");
+				return;
 			} else {
 				displayError("compass-no-support");
 			}
 
-			// Different modes for a device with full sensors and only compass
-			if (latitude != null && longitude != null && hdn != null && pitch != null && roll != null) {
-				var pitch_c = -pitch - verticalAngle;
-				var roll_c = -roll;
+			// Display error if the device has no geolocation
+			if (latitude == null && longitude == null) {
+				displayError("geo-no-support", "Your device does not support geolocation.");
+				return;
+			} else {
+				displayError("geo-no-support");
+			}
+
+			// Different modes for a device with full sensors, only orientation data, and only compass
+			if (acceleration.roll != null && acceleration.pitch != null) {
+				var yaw_c = hdn + bearing;
+				
+				if (rotation.pitch > (3 * Math.PI / 4) && rotation.pitch < (5 * Math.PI / 4)) {
+					yaw_c = yaw_c + Math.PI;
+				}
+
+				// NOTE: Z points up, X points right, Y points forwards
+				//       That means Z is yaw, X is pitch, Y is roll
+				const rot = new THREE.Euler(sRad(- acceleration.pitch - verticalAngle), sRad(- acceleration.roll), sRad(yaw_c), 'XYZ');
+				model.setRotationFromEuler(rot);
+			} else if (rotation.pitch != null && rotation.roll != null) {
+				displayWarning('motion-no-support', 'Due to your device\'s capabilities, there may be a large error in roll when the device is oriented vertically.');
+				console.warn("No acceleration data. Falling back to orientation API.");
+				var pitch_c = -rotation.pitch - verticalAngle;
+				var roll_c = -rotation.roll;
 				var yaw_c = hdn + bearing;
 
-				if (pitch > Math.PI / 2 && pitch < 3 * Math.PI / 2) {
+				if (rotation.pitch > Math.PI / 2 && rotation.pitch < 3 * Math.PI / 2) {
 					roll_c = roll;
 				}
 
-				if (pitch > Math.PI) {
+				if (rotation.pitch > Math.PI) {
 					pitch_c = Math.PI + pitch_c;
 					yaw_c = yaw_c + Math.PI;
 					roll_c = -roll_c + Math.PI;
 				}
 
-				if (pitch > (3 * Math.PI / 4) && pitch < (5 * Math.PI / 4)) {
+				if (rotation.pitch > (3 * Math.PI / 4) && rotation.pitch < (5 * Math.PI / 4)) {
 					yaw_c = yaw_c + Math.PI;
 				}
 
-				// TODO: Reduce roll sensitivity as pitch gets closer to 90 deg
-				// NOTE: Divide by 9 at the extreme pitch
-
 				// NOTE: Z points up, X points right, Y points forwards
 				//       That means Z is yaw, X is pitch, Y is roll
-				
-				// TEST: print thingy
-				console.debug(verticalAngle);
-
 				const rot = new THREE.Euler(sRad(pitch_c), sRad(roll_c), sRad(yaw_c), 'XYZ');
-				console.debug("rotation: " + rot.toArray());
 				model.setRotationFromEuler(rot);
-
-				// TODO: Calculate angle to hell
-			} else if (latitude != null && longitude != null && hdn != null) {
+			} else {
 				model.rotation.x = 0;
 				model.rotation.y = 0;
 				model.rotation.z = hdn + bearing;

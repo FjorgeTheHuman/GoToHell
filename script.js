@@ -259,8 +259,9 @@ window.addEventListener("load", () => {
 					roll_c = -roll_c + Math.PI;
 				}
 
-				if (pitch_c >= 5 * Math.PI / 4 && pitch_c < 7 * Math.PI / 4) {
-					//yaw_c = yaw_c + Math.PI;
+				if (pitch_c >= (5 * Math.PI / 4) && pitch_c < (7 * Math.PI / 4)) {
+					console.debug("Yaw inverted");
+					yaw_c = yaw_c + Math.PI;
 				}
 
 				// TODO: Reduce roll sensitivity as pitch gets closer to 90 deg

@@ -259,6 +259,7 @@ window.addEventListener("load", () => {
 					roll_c = -roll_c + Math.PI;
 				}
 
+				console.debug(pitch);
 				if (pitch >= (5 * Math.PI / 4) && pitch < (7 * Math.PI / 4)) {
 					console.debug("Yaw inverted");
 					yaw_c = yaw_c + Math.PI;

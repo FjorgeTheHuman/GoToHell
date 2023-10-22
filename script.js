@@ -333,7 +333,7 @@ window.addEventListener("load", () => {
 
 				// NOTE: Z points up, X points right, Y points forwards
 				//       That means Z is yaw, X is pitch, Y is roll
-				const rot = new THREE.Euler(sRad(- acceleration.pitch - verticalAngle), sRad(- acceleration.roll), sRad(yaw_c), 'XYZ');
+				const rot = new THREE.Euler(sRad(- acceleration.pitch - verticalAngle), sRad(- acceleration.roll), sRad(yaw_c), 'XZY');
 				model.setRotationFromEuler(rot);
 			} else if (rotation.pitch != null && rotation.roll != null) {
 				displayWarning('motion-no-support', 'Due to your device\'s capabilities, there may be a large error in roll when the device is oriented vertically.');

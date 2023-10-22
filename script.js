@@ -249,6 +249,10 @@ window.addEventListener("load", () => {
 				var roll_c = -roll;
 				var yaw_c = hdn + bearing;
 
+				if (pitch > 5 * Math.PI / 4 && pitch < 7 * Math.PI / 4) {
+					yaw_c = yaw_c + Math.PI;
+				}
+
 				if (pitch > Math.PI / 2 && pitch < 3 * Math.PI / 2) {
 					roll_c = roll;
 				}
@@ -259,11 +263,6 @@ window.addEventListener("load", () => {
 					roll_c = -roll_c + Math.PI;
 				}
 
-				pitch_c = sRad(pitch_c);
-
-				if (pitch_c > 5 * Math.PI / 4 && pitch_c < 7 * Math.PI / 4) {
-					yaw_c = yaw_c + Math.PI;
-				}
 
 				// TODO: Reduce roll sensitivity as pitch gets closer to 90 deg
 

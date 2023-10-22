@@ -216,8 +216,7 @@ window.addEventListener("load", () => {
 				DeviceMotionEvent.requestPermission().then(handleResponse).catch(() => {
 					// No warning yet
 				});
-			};
-			if (DeviceOrientationEvent) {
+			} else if (DeviceOrientationEvent.requestPermission) {
 				DeviceOrientationEvent.requestPermission().then(handleResponse).catch(() => {
 					// No warning yet
 				});
@@ -328,13 +327,13 @@ window.addEventListener("load", () => {
 			if (acceleration.roll != null && acceleration.pitch != null) {
 				var yaw_c = hdn + bearing;
 				
-				if (rotation.pitch > (3 * Math.PI / 4) && rotation.pitch < (5 * Math.PI / 4)) {
+				if (acceleration.pitch > (3 * Math.PI / 4) && acceleration.pitch < (5 * Math.PI / 4)) {
 					yaw_c = yaw_c + Math.PI;
 				}
 
 				// NOTE: Z points up, X points right, Y points forwards
 				//       That means Z is yaw, X is pitch, Y is roll
-				const rot = new THREE.Euler(sRad(- acceleration.pitch - verticalAngle), sRad(- acceleration.roll), sRad(yaw_c), 'XYZ');
+				const rot = new THREE.Euler(sRad(- acceleration.pitch - verticalAngle), sRad(- acceleration.roll), sRad(yaw_c), 'ZYX');
 				model.setRotationFromEuler(rot);
 			} else if (rotation.pitch != null && rotation.roll != null) {
 				displayWarning('motion-no-support', 'Due to your device\'s capabilities, there may be a large error in roll when the device is oriented vertically.');

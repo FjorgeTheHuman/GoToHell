@@ -43,7 +43,7 @@ function calcBearing(lat1, lon1, lat2, lon2) {
 };
 
 function calcVerticalAngle(lat1, lon1, lat2, lon2) {
-	return sRad((calcDistance(lat1, lon1, lat2, lon2) / (2 * Math.PI * EARTH_RADIUS)) * 360) / 2;
+	return degToRad((calcDistance(lat1, lon1, lat2, lon2) / (2 * Math.PI * EARTH_RADIUS)) * 360) / 2;
 }
 
 window.addEventListener("load", () => {

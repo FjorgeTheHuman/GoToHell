@@ -246,11 +246,11 @@ window.addEventListener("load", () => {
 			// Different modes for a device with full sensors and only compass
 			if (latitude != null && longitude != null && hdn != null && pitch != null && roll != null) {
 				var pitch_c = -pitch;
-				var roll_c = roll;
+				var roll_c = -roll;
 				var yaw_c = hdn + bearing;
 
 				if (pitch > Math.PI / 2 && pitch < 3 * Math.PI / 2) {
-					roll_c = -roll;
+					roll_c = roll;
 				}
 
 				if (pitch > Math.PI) {

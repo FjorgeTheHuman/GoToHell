@@ -261,7 +261,7 @@ window.addEventListener("load", () => {
 
 				pitch_c = sRad(pitch_c);
 
-				if (pitch_c > 3 * Math.PI / 2 && pitch_c < 7 * Math.PI / 4) {
+				if (pitch_c > 5 * Math.PI / 4 && pitch_c < 3 * Math.PI / 2) {
 					yaw_c = yaw_c + Math.PI;
 				}
 

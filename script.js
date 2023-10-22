@@ -42,13 +42,16 @@ function calcBearing(lat1, lon1, lat2, lon2) {
 	return Math.acos((Math.cos(theta_2) - Math.cos(theta_1) * Math.cos(phi)) / (Math.sin(theta_1) * Math.sin(phi)));
 };
 
+function calcVerticalAngle(lat1, lon1, lat2, lon2) {
+	return sRad((calcDistance(lat1, lon1, lat2, lon2) / (2 * Math.PI * EARTH_RADIUS)) * 360) / 2;
+}
+
 window.addEventListener("load", () => {
 	const canVibrate = ('vibrate' in window.navigator);
 
 	// Constants
 	const hell_latitude = degToRad(42.4338);
 	const hell_longitude = degToRad(-83.9845);
-	const hell_altitude = 270;
 
 	// Variables for current device data
 	var latitude;
@@ -182,7 +185,7 @@ window.addEventListener("load", () => {
 
 	// Create the required three.js objects
 	const scene = new THREE.Scene();
-	const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+	const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 10.1);
 	const renderer = new THREE.WebGLRenderer({ antialias: true });
 	renderer.outputColorSpace = THREE.SRGBColorSpace;
 	const loader = new GLTFLoader();
@@ -232,6 +235,7 @@ window.addEventListener("load", () => {
 			// Get distance between user and hell
 			const distance = calcDistance(latitude, longitude, hell_latitude, hell_longitude);
 			const bearing = calcBearing(latitude, longitude, hell_latitude, hell_longitude);
+			const verticalAngle = calcVerticalAngle(latitude, longitude, hell_latitude, hell_longitude);
 
 			// Get compass heading
 			const hdn = yaw || heading;
@@ -245,7 +249,7 @@ window.addEventListener("load", () => {
 
 			// Different modes for a device with full sensors and only compass
 			if (latitude != null && longitude != null && hdn != null && pitch != null && roll != null) {
-				var pitch_c = -pitch;
+				var pitch_c = -pitch - verticalAngle;
 				var roll_c = -roll;
 				var yaw_c = hdn + bearing;
 
@@ -254,21 +258,20 @@ window.addEventListener("load", () => {
 				}
 
 				if (pitch > Math.PI) {
-					pitch_c = Math.PI - pitch;
+					pitch_c = Math.PI + pitch_c;
 					yaw_c = yaw_c + Math.PI;
 					roll_c = -roll_c + Math.PI;
 				}
 
-				console.debug(pitch);
-				if (pitch >= (3 * Math.PI / 4) && pitch < (5 * Math.PI / 4)) {
-					console.debug("Yaw inverted");
+				if (pitch > (3 * Math.PI / 4) && pitch < (5 * Math.PI / 4)) {
 					yaw_c = yaw_c + Math.PI;
 				}
 
 				// TODO: Reduce roll sensitivity as pitch gets closer to 90 deg
+				// NOTE: Divide by 9 at the extreme pitch
 
-				// Z points up, X points right, Y points forwards
-				// That means Z is yaw, X is pitch, Y is roll
+				// NOTE: Z points up, X points right, Y points forwards
+				//       That means Z is yaw, X is pitch, Y is roll
 				const rot = new THREE.Euler(sRad(pitch_c), sRad(roll_c), sRad(yaw_c), 'XYZ');
 				console.debug("rotation: " + rot.toArray());
 				model.setRotationFromEuler(rot);

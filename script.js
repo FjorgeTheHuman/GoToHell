@@ -272,6 +272,10 @@ window.addEventListener("load", () => {
 
 				// NOTE: Z points up, X points right, Y points forwards
 				//       That means Z is yaw, X is pitch, Y is roll
+				
+				// TEST: print thingy
+				console.debug(verticalAngle);
+
 				const rot = new THREE.Euler(sRad(pitch_c), sRad(roll_c), sRad(yaw_c), 'XYZ');
 				console.debug("rotation: " + rot.toArray());
 				model.setRotationFromEuler(rot);

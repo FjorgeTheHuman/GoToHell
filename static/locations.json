@@ -1,0 +1,24 @@
+{
+  'locations': [
+    {
+      'name': 'Hell, Michigan, USA',
+      'latitude': 42.434722,
+      'longitude': -83.985
+    }¸
+    {
+      'name': 'Hell, Grand Cayman, Cayman Islands',
+      'latitude': 19.37935,
+      'longitude': -81.40678
+    },
+    {
+      'name': 'Hell, Trøndelag, Norway',
+      'latitude': 63.4444,
+      'longitude': 10.9227
+    },
+    {
+      'name': 'Hell, Gelderland, Netherlands',
+      'latitude': 52.235278,
+      'longitude': 5.545278
+    }
+  ]
+}

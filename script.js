@@ -1,7 +1,6 @@
 import * as THREE from 'three';
 import WebGL from 'three/addons/capabilities/WebGL.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import locations from "./static/locations.json";
 
 // Ensuring radians are positive and between 0 and 2pi
 function sRad(rad) {
@@ -47,8 +46,11 @@ function calcVerticalAngle(lat1, lon1, lat2, lon2) {
 	return degToRad((calcDistance(lat1, lon1, lat2, lon2) / (2 * Math.PI * EARTH_RADIUS)) * 360) / 2;
 }
 
-window.addEventListener("load", () => {
+window.addEventListener("load", async () => {
 	const canVibrate = ('vibrate' in window.navigator);
+
+	// Fetch location data JSON
+  const data = JSON.parse(await (await fetch(new Request('./static/locations.json'))).text());
 
 	// Populate menu of locations
 	for (i = -1; i < data.locations.length; i++) {

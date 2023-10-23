@@ -338,8 +338,12 @@ window.addEventListener("load", () => {
 					yaw_c = yaw_c + Math.PI;
 				}
 
+				if (acceleration.pitch > (Math.PI) && acceleration.pitch < (7 * Math.PI / 4)) {
+					yaw_c = yaw_c + Math.PI;
+				}
+
 				// TEST: Log angles
-				console.debug(`Pitch: ${sRad(acceleration.pitch)}\nRoll: ${sRad(Math.PI - acceleration.roll)}\n Yaw: ${hdn}`);
+				console.debug(`Pitch: ${sRad(acceleration.pitch)}\nRoll: ${sRad(Math.PI - acceleration.roll)}\n Yaw: ${yaw_c}`);
 
 				// NOTE: Z points up, X points right, Y points forwards
 				//       That means Z is yaw, X is pitch, Y is roll

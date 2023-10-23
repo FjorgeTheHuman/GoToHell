@@ -387,7 +387,7 @@ window.addEventListener("load", () => {
 			const size = Math.min(document.getElementById("center").clientWidth, document.getElementById("center").clientHeight);
 			renderer.setSize(size, size);
 			if (screen.orientation) {
-				document.getElementById('arrow').style.transform = `rotate(-${screen.orientation.angle}deg)`;
+				document.getElementById('arrow').style.transform = `rotate(${screen.orientation.angle}deg)`;
 			}
 
 			// Render the scene

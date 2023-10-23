@@ -333,17 +333,14 @@ window.addEventListener("load", () => {
 			// Different modes for a device with full sensors, only orientation data, and only compass
 			if (acceleration.roll != null && acceleration.pitch != null) {
 				var yaw_c = hdn + bearing;
+				var pitch_c = sRad(acceleration.pitch);
 				
-				if (acceleration.pitch > (Math.PI / 4) && acceleration.pitch < (7 * Math.PI / 4)) {
-					yaw_c = yaw_c + Math.PI;
-				}
-
-				if (acceleration.pitch > (Math.PI) && acceleration.pitch < (7 * Math.PI / 4)) {
+				if (pitch_c < (Math.PI / 4) || pitch_c > (7 * Math.PI / 4)) {
 					yaw_c = yaw_c + Math.PI;
 				}
 
 				// TEST: Log angles
-				console.debug(`Pitch: ${sRad(acceleration.pitch)}\nRoll: ${sRad(Math.PI - acceleration.roll)}\n Yaw: ${yaw_c}`);
+				console.debug(`Pitch: ${pitch_c}\nRoll: ${sRad(Math.PI - acceleration.roll)}\n Yaw: ${yaw_c}`);
 
 				// NOTE: Z points up, X points right, Y points forwards
 				//       That means Z is yaw, X is pitch, Y is roll

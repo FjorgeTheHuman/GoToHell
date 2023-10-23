@@ -329,11 +329,13 @@ window.addEventListener("load", () => {
 
 			// Different modes for a device with full sensors, only orientation data, and only compass
 			if (acceleration.roll != null && acceleration.pitch != null) {
-				var yaw_c = hdn + bearing;
+				var yaw_c = hdn;
 				var pitch_c = sRad(acceleration.pitch);
 				
 				if (pitch_c > (Math.PI / 4) && pitch_c < (7 * Math.PI / 4)) {
-					yaw_c = yaw_c + Math.PI;
+					yaw_c = yaw_c + Math.PI - bearing;
+				} else {
+					yaw_c = yaw_c + bearing;
 				}
 
 				// TEST: Log angles

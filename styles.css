@@ -110,8 +110,8 @@ body {
 	width: 42px;
 	padding-top: 10px;
 	text-align: center;
-	border-color: #000000;
-	border-left: 5px;
+	position: relative;
+	left: 5px;
 }
 
 .location-select-box-option {

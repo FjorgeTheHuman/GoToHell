@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import WebGL from 'three/addons/capabilities/WebGL.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import locations from "./static/locations.json" assert { type: "json" };
 
 // Ensuring radians are positive and between 0 and 2pi
 function sRad(rad) {
@@ -48,10 +49,6 @@ function calcVerticalAngle(lat1, lon1, lat2, lon2) {
 
 window.addEventListener("load", () => {
 	const canVibrate = ('vibrate' in window.navigator);
-
-	// Constants
-	const hell_latitude = degToRad(42.4338);
-	const hell_longitude = degToRad(-83.9845);
 
 	// Variables for current device data
 	var latitude;

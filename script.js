@@ -332,7 +332,7 @@ window.addEventListener("load", () => {
 				}
 
 				// TEST: Log angles
-				console.debug(`Pitch: ${sRad(acceleration.pitch)}\nRoll: ${sRad(acceleration.roll)}\n Yaw: ${hdn}`);
+				console.debug(`Pitch: ${sRad(acceleration.pitch)}\nRoll: ${sRad(180 - acceleration.roll)}\n Yaw: ${hdn}`);
 
 				// NOTE: Z points up, X points right, Y points forwards
 				//       That means Z is yaw, X is pitch, Y is roll

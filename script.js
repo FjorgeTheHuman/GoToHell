@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import WebGL from 'three/addons/capabilities/WebGL.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import locations from "./static/locations.json" assert { type: "json" };
+import locations from "./static/locations.json";
 
 // Ensuring radians are positive and between 0 and 2pi
 function sRad(rad) {
@@ -62,7 +62,7 @@ window.addEventListener("load", () => {
 
 		name = name.trim().replace('[,\s]+', '-');
 
-		const str = `<div class="location-select-box-option"><input id="location-option-${name.toLowerCase()}" type="radio" name="location" value="${i}"><label for="location-option-${name.toLowerCase()}">${name}</label></div>`;
+		const str = `<div class="location-select-box-option"><input id="location-option-${name.toLowerCase()}" type="radio" name="location" value="${i}"${i == -1 ? 'checked="checked"' : ''}><label for="location-option-${name.toLowerCase()}">${name}</label></div>`;
 
 		const template = document.createElement('template');
 		template.innerHTML = str;

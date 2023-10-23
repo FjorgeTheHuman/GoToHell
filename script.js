@@ -53,7 +53,7 @@ window.addEventListener("load", async () => {
   const data = JSON.parse(await (await fetch(new Request('./static/locations.json'))).text());
 
 	// Populate menu of locations
-	for (i = -1; i < data.locations.length; i++) {
+	for (let i = -1; i < data.locations.length; i++) {
 		let name;
 
 		if (i == -1) {

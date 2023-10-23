@@ -247,7 +247,11 @@ window.addEventListener("load", () => {
 
 	// Lock orientation to portrait if possible
 	if ('lock' in screen.orientation) {
-		screen.orientation.lock('portrait-primary');
+		try {
+			screen.orientation.lock('natural');
+		} catch (e) {
+			console.error(e);
+		}
 	}
 
 	// Create the required three.js objects
@@ -383,7 +387,7 @@ window.addEventListener("load", () => {
 			const size = Math.min(document.getElementById("center").clientWidth, document.getElementById("center").clientHeight);
 			renderer.setSize(size, size);
 			if (screen.orientation) {
-				document.getElementById('arrow').style.transform = `rotate(-${screen.orientation.angle}deg)`;
+				document.getElementById('arrow').style.transform = `rotate(${screen.orientation.angle}deg)`;
 			}
 
 			// Render the scene

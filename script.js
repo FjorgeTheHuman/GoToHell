@@ -245,10 +245,17 @@ window.addEventListener("load", () => {
 		return;
 	}
 
-	// Lock orientation to portrait if possible
+	// Lock orientation to portrait if possible and detect changes of it
 	if ('lock' in screen.orientation) {
-		screen.orientation.lock('portrait-primary');
+		try {
+			screen.orientation.lock('natural');
+		} catch (e) {
+			console.error(e);
+		}
 	}
+	screen.orientation.addEventListener('change', (event) => {
+		document.getElementById('arrow').style.transform = `rotate(-${event.angle}deg)`;
+	});
 
 	// Create the required three.js objects
 	const scene = new THREE.Scene();

@@ -333,17 +333,15 @@ window.addEventListener("load", () => {
 				var pitch_c = sRad(acceleration.pitch);
 				
 				if (pitch_c > (Math.PI / 4) && pitch_c < (7 * Math.PI / 4)) {
-					yaw_c = yaw_c + Math.PI - bearing;
-				} else {
-					yaw_c = yaw_c + bearing;
+					yaw_c = yaw_c + Math.PI;
 				}
 
 				// TEST: Log angles
-				console.debug(`Pitch: ${sRad(pitch_c)}\nRoll: ${sRad(Math.PI - acceleration.roll)}\n Yaw: ${sRad(yaw_c)}`);
+				console.debug(`Pitch: ${sRad(pitch_c)}\nRoll: ${sRad(Math.PI - acceleration.roll)}\n Yaw: ${sRad(yaw_c}`);
 
 				// NOTE: Z points up, X points right, Y points forwards
 				//       That means Z is yaw, X is pitch, Y is roll
-				const rot = new THREE.Euler(sRad(- acceleration.pitch - verticalAngle), sRad(Math.PI - acceleration.roll), sRad(yaw_c), 'XYZ');
+				const rot = new THREE.Euler(sRad(- acceleration.pitch - verticalAngle), sRad(Math.PI - acceleration.roll), sRad(hdn_2), 'XYZ');
 				model.setRotationFromEuler(rot);
 			} else if (rotation.pitch != null && rotation.roll != null) {
 				displayWarning('motion-no-support', 'Due to your device\'s capabilities, there may be a large error in roll when the device is oriented vertically.');

@@ -50,6 +50,26 @@ function calcVerticalAngle(lat1, lon1, lat2, lon2) {
 window.addEventListener("load", () => {
 	const canVibrate = ('vibrate' in window.navigator);
 
+	// Populate menu of locations
+	for (i = -1; i < data.locations.length; i++) {
+		let name;
+
+		if (i == -1) {
+			name = "Closest";
+		} else {
+			name = data.locations[i].name;
+		}
+
+		name = name.trim().replace('[,\s]+', '-');
+
+		const str = `<div class="location-select-box-option"><input id="location-option-${name.toLowerCase()}" type="radio" name="location" value="${i}"><label for="location-option-${name.toLowerCase()}">${name}</label></div>`;
+
+		const template = document.createElement('template');
+		template.innerHTML = str;
+
+		document.getElementById('location-select-form').prepend(template.content.firstChild);
+	}
+
 	// Variables for current device data
 	var latitude;
 	var longitude;

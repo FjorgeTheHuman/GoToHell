@@ -1,22 +1,26 @@
 {
   'locations': [
     {
-      'name': 'Hell, Michigan, USA',
+      'name': 'Michigan, USA',
+      'url': 'https://en.wikipedia.org/wiki/Hell,_Michigan',
       'latitude': 42.434722,
       'longitude': -83.985
     }¸
     {
-      'name': 'Hell, Grand Cayman, Cayman Islands',
+      'name': 'Grand Cayman, Cayman Islands',
+      'url': 'https://en.wikipedia.org/wiki/Hell,_Grand_Cayman',
       'latitude': 19.37935,
       'longitude': -81.40678
     },
     {
-      'name': 'Hell, Trøndelag, Norway',
+      'name': 'Trøndelag, Norway',
+      'url': 'https://no.wikipedia.org/wiki/Hell',
       'latitude': 63.4444,
       'longitude': 10.9227
     },
     {
-      'name': 'Hell, Gelderland, Netherlands',
+      'name': 'Gelderland, Netherlands',
+      'url': 'https://nl.wikipedia.org/wiki/Hell_(Nederland)',
       'latitude': 52.235278,
       'longitude': 5.545278
     }

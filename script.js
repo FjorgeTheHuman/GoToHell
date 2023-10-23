@@ -335,7 +335,7 @@ window.addEventListener("load", () => {
 				var yaw_c = hdn + bearing;
 				var pitch_c = sRad(acceleration.pitch);
 				
-				if (pitch_c < (Math.PI / 4) || pitch_c > (7 * Math.PI / 4)) {
+				if (pitch_c > (Math.PI / 4) && pitch_c <= (7 * Math.PI / 4)) {
 					yaw_c = yaw_c + Math.PI;
 				}
 

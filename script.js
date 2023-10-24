@@ -73,17 +73,17 @@ window.addEventListener("load", async () => {
 	}
 
 	// Add handler for location menu toggle
+	const locationSelectForm = document.getElementById('location-select-form');
 	const locationSelectToggle = document.getElementById('location-select-box-button');
+	const locationSelectBox = document.getElementById('location-select-box');
 
 	locationSelectToggle.addEventListener('click', (event) => {
-		if (locationSelectToggle.ariaChecked === true) {
+		if (locationSelectToggle.ariaChecked === "true") {
 			locationSelectToggle.ariaChecked = false;
-
-			locationSelectToggle.className = "in";
+			locationSelectBox.className = "in";
 		} else {
 			locationSelectToggle.ariaChecked = true;
-
-			locationSelectToggle.className = "out";
+			locationSelectBox.className = "out";
 		}
 	});
 

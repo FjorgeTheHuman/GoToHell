@@ -139,6 +139,13 @@ button {
   user-select: none; /* Standard syntax */
 }
 
+.location-option-selected {
+	margin-left: -3px;
+	border-right: 3px;
+	border-style: solid;
+	border-color: #820014;
+}
+
 .location-select-box-option > input {
 	position: fixed;
 	opacity: 0;

@@ -46,6 +46,10 @@ function calcVerticalAngle(lat1, lon1, lat2, lon2) {
 	return degToRad((calcDistance(lat1, lon1, lat2, lon2) / (2 * Math.PI * EARTH_RADIUS)) * 360) / 2;
 }
 
+function genLocationId(loc) {
+	return `location-option-${loc.name}-${loc.region}-${loc.nation}`.toLowerCase();
+}
+
 window.addEventListener("load", async () => {
 	const canVibrate = ('vibrate' in window.navigator);
 
@@ -55,16 +59,17 @@ window.addEventListener("load", async () => {
 	// Populate menu of locations
 	for (let i = -1; i < data.locations.length; i++) {
 		let name;
+		let id;
 
 		if (i == -1) {
 			name = "Closest";
+			id = name.toLowerCase();
 		} else {
 			name = `${data.locations[i].region}, ${data.locations[i].nation}`;
+			id = genLocationId(data.locations[i]);
 		}
 
-		name = name.trim().replace('[,\s]+', '-');
-
-		const str = `<div class="location-select-box-option"><input id="location-option-${name.toLowerCase()}" type="radio" name="location" value="${i}"${i == -1 ? 'checked="checked"' : ''}><label for="location-option-${name.toLowerCase()}">${name}</label></div>`;
+		const str = `<div class="location-select-box-option"><input id="${id}" type="radio" name="location" value="${i}"${i == -1 ? 'checked="checked"' : ''}><label for="${id}">${name}</label></div>`;
 
 		const template = document.createElement('template');
 		template.innerHTML = str;
@@ -360,6 +365,9 @@ window.addEventListener("load", async () => {
 							bearing = calcBearing(latitude, longitude, locLatitude, locLongitude);
 							verticalAngle = calcVerticalAngle(latitude, longitude, locLatitude, locLongitude);
 						}
+
+						// Add a border to it
+						id = `${data.locations[i].name}-${data.locations[i].region}-${data.locations[i].nation}`.toLowerCase();
 					}
 				}
 			} else {
@@ -376,6 +384,10 @@ window.addEventListener("load", async () => {
 				// Update links and references to hell
 				document.getElementById('hell-name').setAttribute('title', `${data.locations[loc].name}, ${data.locations[loc].region}, ${data.locations[loc].nation}`);
 				document.getElementById('hell-link').setAttribute('href', `${data.locations[loc].url}`);
+
+				// Do stuff
+				$('.location-select-box-option > label').removeClass("location-option-selected");
+				$(`.location-select-box-option > input#${genLocationId(data.locations[loc])} ~ label`).addClass('location-option-selected');
 
 				// Set distance to hell
 				if (latitude != null && longitude != null) {

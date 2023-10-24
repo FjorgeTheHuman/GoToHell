@@ -108,7 +108,7 @@ button {
 
 #location-select-form-container {
 	position: relative;
-	bottom: -2px;
+	margin-bottom: -1px;
 }
 
 #location-select-box.in {

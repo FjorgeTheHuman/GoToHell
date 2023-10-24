@@ -72,6 +72,20 @@ window.addEventListener("load", async () => {
 		document.getElementById('location-select-form').prepend(template.content.firstChild);
 	}
 
+	// Add handler for location menu toggle
+	const location-select-toggle = document.getElementById('location-select-box-button');
+	location-select-toggle.addEventListener('click', (event) => {
+		if (location-select-toggle.ariaChecked === true) {
+			location-select-toggle.ariaChecked = false;
+
+			location-select-toggle.className = "in";
+		} else {
+			location-select-toggle.ariaChecked = true;
+
+			location-select-toggle.className = "out";
+		}
+	});
+
 	// Variables for current device data
 	var latitude;
 	var longitude;

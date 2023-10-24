@@ -1,88 +1,87 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>Go to Hell</title>
-		<!-- Load Three.js -->
-		<script async src="https://unpkg.com/es-module-shims@1.8.0/dist/es-module-shims.js"></script>
-		<script type="importmap">
-			{
-				"imports": {
-					"three": "https://unpkg.com/three@0.157.0/build/three.module.js",
-					"three/addons/": "https://unpkg.com/three@0.157.0/examples/jsm/"
-				}
-			}
-		</script>
-		<!-- Load JQuery -->
-		<script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
-		<!--Load script -->
-		<script type="module" src="script.js"></script>
-		<!-- External Files -->
-		<link rel="stylesheet" href="styles.css">
-		<link rel="icon" type="image/x-icon" href="static/fire.png">
-		<!-- Meta Tags -->
-		<meta charset="UTF-8">
-		<meta name="description" content="A site that tells you to go to Hell (Michigan)">
-		<meta name="keywords" content="Hell, Joke, Funny, Direction">
-		<meta name="author" content="Fjorge">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	</head>
-	<body>
-		<div id="main-content">
-			<div id="top-bar">
-				Go to hell!
-			</div>
+  <head>
+    <title>Go to Hell</title>
+    <!-- Load Three.js -->
+    <script async src="https://unpkg.com/es-module-shims@1.8.0/dist/es-module-shims.js"></script>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.157.0/build/three.module.js",
+          "three/addons/": "https://unpkg.com/three@0.157.0/examples/jsm/"
+        }
+      }
+    </script>
+    <!-- Load JQuery -->
+    <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <!--Load script -->
+    <script type="module" src="script.js"></script>
+    <!-- External Files -->
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/x-icon" href="static/fire.png">
+    <!-- Meta Tags -->
+    <meta charset="UTF-8">
+    <meta name="description" content="A site that tells you to go to Hell (Michigan)">
+    <meta name="keywords" content="Hell, Joke, Funny, Direction">
+    <meta name="author" content="Fjorge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  </head>
+  <body>
+    <div id="main-content">
+      <div id="top-bar">
+        Go to hell!
+      </div>
 
-			<div id="center">
-				<span class="center-overlay" id="distance-box">
-					<span>
-						You are
-					</span>
-					<span id="distance">unknown km</span>
-					<span>
-						<!-- Link is updated depending on the location selected -->
-						from <a href="">hell</a>.
-					</span>
-				</span>
+      <div id="center">
+        <span id="distance-box">
+          <span>
+            You are
+          </span>
+          <span id="distance">an unknown km</span>
+          <span>
+            <!-- Link is updated depending on the location selected -->
+            from <a href="">hell</a>.
+          </span>
+        </span>
 
-				<span class="center-overlay" id="location-select-box">
-					<span>
-						<form id="location-select-form">
-							<!-- Automatically generated menu options -->
-						</form>
-					</span>
+        <span id="location-select-box" class="in">
+          <span id="location-select-box-container">
+            <form id="location-select-form">
+              <!-- Automatically generated menu options -->
+            </form>
+          </span><!-- https://stackoverflow.com/a/14776780 
+       --><button role="switch" id="location-select-box-button" aria-hidden="true" aria-checked="false">
+            🌐
+          </button>
+        </span>
 
-					<span id="location-select-box-button">
-						>
-					</span>
-				</span>
+        <div id="message-box">
+          <noscript>
+            <div id="error-no-js" class="message error">
+              Please enable JavaScript or it is impossible for this website to work. You can vet the script yourself <a href=script.js target="_blank">here</a>.
+              This page also uses <a href="https://jquery.com/" target="_blank">JQuery</a> and <a href="https://threejs.org/" target="_blank">Three.js</a>.
+            </div>
+          </noscript>
+          <div id="message-ask-orient-perm" class="message button" style="display: none;">
+            Please tap or click here to allow the website to access your device orientation.
+          </div>
+          <div id="error-template" class="message error"></div>
+          <div id="warning-template" class="message warning"></div>
+          <!-- Automatically generated messages -->
+        </div>
+      </div>
 
-				<div id="message-box">
-					<noscript>
-						<div id="error-no-js" class="message error">
-							Please enable JavaScript or it is impossible for this website to work. You can vet the script yourself <a href=script.js target="_blank">here</a>.
-							This page also uses <a href="https://jquery.com/" target="_blank">JQuery</a> and <a href="https://threejs.org/" target="_blank">Three.js</a>.
-						</div>
-					</noscript>
-					<div id="message-ask-orient-perm" class="message button" style="display: none;">
-						Please tap or click here to allow the website to access your device orientation.
-					</div>
-					<div id="error-template" class="message error"></div>
-					<div id="warning-template" class="message warning"></div>
-					<!-- Automatically generated messages -->
-				</div>
-			</div>
-
-			<div id="bottom-bar">
-				<span id="author">
-					Fjorge | <a href="https://github.com/FjorgeTheHuman/GoToHell">GitHub</a>
-				</span>
-				<span id="license">
-					Licensed under <a href="LICENSE">GNU GPL v3.0</a>
-				</span>
-			</div>
-		</div>
-	</body>
+      <div id="bottom-bar">
+        <span id="author">
+          Fjorge | <a href="https://github.com/FjorgeTheHuman/GoToHell" target="_blank">GitHub</a>
+        </span>
+        <span id="license">
+          Licensed under <a href="LICENSE" target="_blank">GNU GPL v3.0</a>
+        </span>
+      </div>
+    </div>
+  </body>
 </html>
 
-<!-- vim:noexpandtab:ts=2:sw=2:
+<!-- vim:expandtab:ts=2:sw=2:
 -->

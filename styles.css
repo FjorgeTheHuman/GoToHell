@@ -14,6 +14,11 @@ body {
 	margin: 0px;
 }
 
+button {
+	all: unset;
+	cursor: pointer;
+}
+
 #main-content {
 	height: 100%;
 	width: 100%;
@@ -100,18 +105,36 @@ body {
 	padding-bottom: 5px;
 }
 
-#location-select-box > span {
+#location-select-form-container {
+	position: relative;
+	bottom: -2px;
+}
+
+#location-select-box.in {
+	left: -5px;
+}
+
+#location-select-box.out {
+	left: 0px;
+}
+
+#location-select-box > span,
+#location-select-box > button {
 	background: #1a1a1a;
 	display: inline-block;
 }
 
 #location-select-box-button{
-	height: 32px;
+	height: 42px;
 	width: 42px;
-	padding-top: 10px;
 	text-align: center;
 	position: relative;
+	color: transparent;
+	text-shadow: 0 0 0 white;
 	left: 5px;
+	-webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none; /* Standard syntax */
 }
 
 .location-select-box-option {
@@ -125,8 +148,12 @@ body {
 	pointer-events: none;
 }
 
+#location-select-box-button,
 .location-select-box-option > label {
 	transition: background-color 100ms linear;
+}
+
+.location-select-box-option > label {
 	padding-left: 10px;
 	padding-right: 10px;
 	padding-top: 5px;
@@ -134,23 +161,33 @@ body {
 }
 
 .location-select-box-option > label,
-.location-select-box-option > input:checked ~ label:active {
+.location-select-box-option > input:checked ~ label:active,
+#location-select-box-button[aria-checked="false"],
+#location-select-box-button[aria-checked="true"]:active,
+#location-select-box-button[aria-checked="true"]:hover:active {
 	background-color: #1a1a1a;
 }
 
 .location-select-box-option > input:checked ~ label,
 .location-select-box-option > label:active,
-.location-select-box-option > input:checked ~ label:hover:active {
+.location-select-box-option > input:checked ~ label:hover:active,
+#location-select-box-button[aria-checked="false"]:active,
+#location-select-box-button[aria-checked="false"]:hover:active,
+#location-select-box-button[aria-checked="true"] {
 	background-color: #820014;
 }
 
 .location-select-box-option > input:focus-visible ~ label,
-.location-select-box-option > label:hover {
+.location-select-box-option > label:hover,
+#location-select-box-button[aria-checked="false"]:focus-visible,
+#location-select-box-button[aria-checked="false"]:hover {
 	background-color: #404040;
 }
 
 .location-select-box-option > input:checked:focus-visible ~ label,
-.location-select-box-option > input:checked ~ label:hover {
+.location-select-box-option > input:checked ~ label:hover,
+#location-select-box-button[aria-checked="true"]:focus-visible,
+#location-select-box-button[aria-checked="true"]:hover {
 	background-color: #a8071a;
 }
 

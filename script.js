@@ -351,7 +351,7 @@ window.addEventListener("load", async () => {
 				// Find the closest location
 				loc = 0;
 				distance = Number.MAX_SAFE_INTEGER;
-				for (int i = 0; i < data.locations.length; i++) {
+				for (let i = 0; i < data.locations.length; i++) {
 					const locLatitude = degToRad(data.locations[i].latitude);
 					const locLongitude = degToRad(data.locations[i].longitude);
 

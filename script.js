@@ -89,14 +89,10 @@ window.addEventListener("load", async () => {
 		}
 	});
 
-	// TEST: Temp variables
-	const hell_latitude = 0;
-	const hell_longitude = 0;
-
 	// Variables for current device data
-	var latitude;
-	var longitude;
-	var heading;
+	var latitude = null;
+	var longitude = null;
+	var heading = null;
 	const rotation = {
 		yaw: null,
 		pitch: null,
@@ -348,20 +344,22 @@ window.addEventListener("load", async () => {
 			let verticalAngle;
 
 			if (loc === -1) {
-				// Find the closest location
-				loc = 0;
-				distance = Number.MAX_SAFE_INTEGER;
-				for (let i = 0; i < data.locations.length; i++) {
-					const locLatitude = degToRad(data.locations[i].latitude);
-					const locLongitude = degToRad(data.locations[i].longitude);
+				if (latitude != null && longitude != null) {
+					// Find the closest location
+					loc = 0;
+					distance = Number.MAX_SAFE_INTEGER;
+					for (let i = 0; i < data.locations.length; i++) {
+						const locLatitude = degToRad(data.locations[i].latitude);
+						const locLongitude = degToRad(data.locations[i].longitude);
 
-					const iDistance = calcDistance(latitude, longitude, locLatitude, locLongitude);
+						const iDistance = calcDistance(latitude, longitude, locLatitude, locLongitude);
 
-					if (iDistance <= distance) {
-						loc = i;
-						distance = iDistance;
-						bearing = calcBearing(latitude, longitude, locLatitude, locLongitude);
-						verticalAngle = calcVerticalAngle(latitude, longitude, locLatitude, locLongitude);
+						if (iDistance <= distance) {
+							loc = i;
+							distance = iDistance;
+							bearing = calcBearing(latitude, longitude, locLatitude, locLongitude);
+							verticalAngle = calcVerticalAngle(latitude, longitude, locLatitude, locLongitude);
+						}
 					}
 				}
 			} else {
@@ -377,6 +375,11 @@ window.addEventListener("load", async () => {
 			// Update links and references to hell
 			document.getElementById('hell-name').setAttribute('title', `${data.locations[loc].name}, ${data.locations[loc].region}, ${data.locations[loc].nation}`);
 			document.getElementById('hell-link').setAttribute('href', `${data.locations[loc].url}`);
+
+			// Set distance to hell
+			if (latitude != null && longitude != null) {
+				document.getElementById('distance').innerHTML = `${distance}km`;
+			}
 
 			// Get compass heading
 			const hdn = rotation.yaw || heading;

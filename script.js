@@ -372,13 +372,15 @@ window.addEventListener("load", async () => {
 				verticalAngle = calcVerticalAngle(latitude, longitude, locLatitude, locLongitude);
 			}
 
-			// Update links and references to hell
-			document.getElementById('hell-name').setAttribute('title', `${data.locations[loc].name}, ${data.locations[loc].region}, ${data.locations[loc].nation}`);
-			document.getElementById('hell-link').setAttribute('href', `${data.locations[loc].url}`);
+			if (loc >= 0) {
+				// Update links and references to hell
+				document.getElementById('hell-name').setAttribute('title', `${data.locations[loc].name}, ${data.locations[loc].region}, ${data.locations[loc].nation}`);
+				document.getElementById('hell-link').setAttribute('href', `${data.locations[loc].url}`);
 
-			// Set distance to hell
-			if (latitude != null && longitude != null) {
-				document.getElementById('distance').innerHTML = `${distance}km`;
+				// Set distance to hell
+				if (latitude != null && longitude != null) {
+					document.getElementById('distance').innerHTML = `${distance.toFixed(2).toLocaleString()}km`;
+				}
 			}
 
 			// Get compass heading

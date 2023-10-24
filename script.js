@@ -21,10 +21,10 @@ const EARTH_RADIUS = 6371;
 function calcDistance(lat1, lon1, lat2, lon2) {
 	// Haversign formula
 	// https://en.wikipedia.org/wiki/Haversine_formula
-	const dlon = lon2 - lon1;
-	const dlat = lat2 - lat1;
+	const dLon = lon2 - lon1;
+	const dLat = lat2 - lat1;
 
-	const a = Math.pow(Math.sin(dlat / 2), 2) + Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin(dlon / 2), 2);
+	const a = Math.pow(Math.sin(dLat / 2), 2) + Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin(dLon / 2), 2);
 
 	return EARTH_RADIUS * 2 * Math.asin(Math.sqrt(a));
 };
@@ -34,7 +34,7 @@ function calcBearing(lat1, lon1, lat2, lon2) {
 	const dL = lon2 - lon1;
 
 	const X = Math.cos(lat2) * Math.sin(dL);
-	const Y = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(dl);
+	const Y = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(dL);
 
 	return Math.atan2(X, Y);
 };

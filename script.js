@@ -365,9 +365,6 @@ window.addEventListener("load", async () => {
 							bearing = calcBearing(latitude, longitude, locLatitude, locLongitude);
 							verticalAngle = calcVerticalAngle(latitude, longitude, locLatitude, locLongitude);
 						}
-
-						// Add a border to it
-						id = `${data.locations[i].name}-${data.locations[i].region}-${data.locations[i].nation}`.toLowerCase();
 					}
 				}
 			} else {
@@ -385,7 +382,7 @@ window.addEventListener("load", async () => {
 				document.getElementById('hell-name').setAttribute('title', `${data.locations[loc].name}, ${data.locations[loc].region}, ${data.locations[loc].nation}`);
 				document.getElementById('hell-link').setAttribute('href', `${data.locations[loc].url}`);
 
-				// Do stuff
+				// Display which location is being selected
 				$('.location-select-box-option > label').removeClass("location-option-selected");
 				$(`.location-select-box-option > input#${genLocationId(data.locations[loc])} ~ label`).addClass('location-option-selected');
 

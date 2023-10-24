@@ -87,6 +87,10 @@ window.addEventListener("load", async () => {
 		}
 	});
 
+	// TEST: Temp variables
+	const hell_latitude = 0;
+	const hell_longitude = 0;
+
 	// Variables for current device data
 	var latitude;
 	var longitude;

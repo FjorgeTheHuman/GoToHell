@@ -99,6 +99,8 @@ button {
 	height: fit-content;
 	z-index: 75;
 	transition: transform 300ms ease-in-out;
+	display: flex;
+	align-items: flex-end;
 }
 
 #location-select-form {
@@ -108,7 +110,6 @@ button {
 
 #location-select-form-container {
 	position: relative;
-	margin-bottom: -1px;
 }
 
 #location-select-box.in {

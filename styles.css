@@ -138,11 +138,6 @@ button {
   user-select: none; /* Standard syntax */
 }
 
-.location-select-box-option {
-	padding-top: 5px;
-	padding-bottom: 5px;
-}
-
 .location-select-box-option > input {
 	position: fixed;
 	opacity: 0;
@@ -159,6 +154,7 @@ button {
 	padding-right: 10px;
 	padding-top: 5px;
 	padding-bottom: 5px;
+	display: block;
 }
 
 .location-select-box-option > label,

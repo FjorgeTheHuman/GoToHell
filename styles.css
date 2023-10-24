@@ -98,6 +98,7 @@ button {
 	max-width: 100vw;
 	height: fit-content;
 	z-index: 75;
+	transition: left 100ms ease-in-out;
 }
 
 #location-select-form {
@@ -111,7 +112,8 @@ button {
 }
 
 #location-select-box.in {
-	left: -5px;
+	right: calc(100% - 42px);
+	left: unset;
 }
 
 #location-select-box.out {

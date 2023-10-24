@@ -140,10 +140,7 @@ button {
 }
 
 .location-option-selected {
-	margin-left: -3px;
-	border-right: 3px;
-	border-style: solid;
-	border-color: #820014;
+	box-shadow: inset 4px 0 0 0 #820014;
 }
 
 .location-select-box-option > input {

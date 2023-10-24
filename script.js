@@ -30,16 +30,13 @@ function calcDistance(lat1, lon1, lat2, lon2) {
 };
 
 function calcBearing(lat1, lon1, lat2, lon2) {
-	// Spherical law of cosines
-	// https://www.askamathematician.com/2018/07/q-given-two-points-on-the-globe-how-do-you-figure-out-the-direction-and-distance-to-each-other
-	const distance = calcDistance(lat1, lon1, lat2, lon2);
+	// https://www.igismap.com/what-is-bearing-angle-and-calculate-between-two-points/
+	const dL = lon2 - lon1;
 
-	const theta_1 = Math.PI / 2 - lat1;
-	const theta_2 = Math.PI / 2 - lat2;
+	const X = Math.cos(lat2) * Math.sin(dL);
+	const Y = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(dl);
 
-	const phi = distance / EARTH_RADIUS;
-	
-	return Math.acos((Math.cos(theta_2) - Math.cos(theta_1) * Math.cos(phi)) / (Math.sin(theta_1) * Math.sin(phi)));
+	return Math.atan2(X, Y);
 };
 
 function calcVerticalAngle(lat1, lon1, lat2, lon2) {

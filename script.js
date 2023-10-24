@@ -285,11 +285,9 @@ window.addEventListener("load", async () => {
 
 	// Lock orientation to portrait if possible
 	if ('lock' in screen.orientation) {
-		try {
-			screen.orientation.lock('natural');
-		} catch (e) {
-			console.error(e);
-		}
+		screen.orientation.lock('natural').catch((error) => {
+			console.error(error);
+		});
 	}
 
 	// Create the required three.js objects

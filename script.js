@@ -80,9 +80,11 @@ window.addEventListener("load", async () => {
 	locationSelectToggle.addEventListener('click', (event) => {
 		if (locationSelectToggle.ariaChecked === "true") {
 			locationSelectToggle.ariaChecked = "false";
+			locationSelectToggle.setAttribute('aria-checked', 'false');
 			locationSelectBox.className = "in";
 		} else {
 			locationSelectToggle.ariaChecked = "true";
+			locationSelectToggle.setAttribute('aria-checked', 'true');
 			locationSelectBox.className = "out";
 		}
 	});

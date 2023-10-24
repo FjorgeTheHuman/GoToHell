@@ -359,7 +359,7 @@ window.addEventListener("load", async () => {
 
 					if (iDistance <= distance) {
 						loc = i;
-						distnace = iDistance;
+						distance = iDistance;
 						bearing = calcBearing(latitude, longitude, locLatitude, locLongitude);
 						verticalAngle = calcVerticalAngle(latitude, longitude, locLatitude, locLongitude);
 					}

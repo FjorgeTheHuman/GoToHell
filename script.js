@@ -411,7 +411,7 @@ window.addEventListener("load", async () => {
 			}
 
 			// Different modes for a device with full sensors, only orientation data, and only compass
-			if (acceleration.roll != null && acceleration.pitch != null) {
+			if (acceleration.roll != null || acceleration.pitch != null) {
 				var yaw_c = hdn - bearing;
 				var pitch_c = sRad(acceleration.pitch);
 				
@@ -423,7 +423,7 @@ window.addEventListener("load", async () => {
 				//       That means Z is yaw, X is pitch, Y is roll
 				const rot = new THREE.Euler(sRad(- acceleration.pitch - verticalAngle), sRad(Math.PI - acceleration.roll), sRad(yaw_c), 'XYZ');
 				model.setRotationFromEuler(rot);
-			} else if (rotation.pitch != null && rotation.roll != null) {
+			} else if (rotation.pitch != null || rotation.roll != null) {
 				displayWarning('motion-no-support', 'Due to your device\'s capabilities, there may be a large error in roll when the device is oriented vertically.');
 				console.warn("No acceleration data. Falling back to orientation API.");
 				var pitch_c = -rotation.pitch - verticalAngle;
@@ -451,7 +451,7 @@ window.addEventListener("load", async () => {
 			} else {
 				model.rotation.x = 0;
 				model.rotation.y = 0;
-				model.rotation.z = hdn + bearing;
+				model.rotation.z = hdn - bearing;
 			}
 
 			// Vibrate if possible and arrow is close enough

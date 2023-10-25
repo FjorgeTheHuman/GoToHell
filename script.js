@@ -94,16 +94,21 @@ window.addEventListener("load", async () => {
 	// Add handler for AR toggle
 	const ARToggle = document.getElementById('ar-toggle-button');
 
-	ARToggle.addEventListener('click', (event) => {
-		if (ARToggle.ariaChecked === "true") {
-			ARToggle.ariaChecked = "false";
-			ARToggle.setAttribute('aria-checked', 'false');
-		} else {
-			ARToggle.ariaChecked = "true";
-			ARToggle.setAttribute('aria-checked', 'true');
-		}
-	});
+	if (navigator.xr && (await navigator.xr.isSessionSupported('immersive-ar'))) {
+		ARToggle.style = "";
 
+		ARToggle.addEventListener('click', (event) => {
+			if (ARToggle.ariaChecked === "true") {
+				ARToggle.ariaChecked = "false";
+				ARToggle.setAttribute('aria-checked', 'false');
+			} else {
+				ARToggle.ariaChecked = "true";
+				ARToggle.setAttribute('aria-checked', 'true');
+			}
+		});
+	} else {
+		console.info("WebXR AR is not supported.");
+	}
 
 	// Variables for current device data
 	var latitude = null;

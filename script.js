@@ -316,8 +316,8 @@ window.addEventListener("load", async () => {
 		function endARSession() {
 			ARSession.removeEventListener('end', startARSession);
 
-			ARSession = null;
 			renderer.xr.enabled = false;
+			ARSession = null;
 		}
 
 		ARToggle.addEventListener('click', (event) => {
@@ -388,7 +388,7 @@ window.addEventListener("load", async () => {
 		// Update all the displays
 		function updateDisplays() {
 			// Call function every frame
-			requestAnimationFrame(updateDisplays);
+			renderer.setAnimationLoop(updateDisplays);
 
 			// Find the angles and distance to the selected location
 			let loc = parseInt(locationSelectForm.elements.location.value);

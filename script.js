@@ -339,8 +339,11 @@ window.addEventListener("load", async () => {
 				renderer.xr.enabled = true;
 
 				navigator.xr.requestSession('immersive-ar', {
-					requiredFeatures: ['dom-overlay', 'local'],
-					optionalFeatures: ['light-estimation']
+					requiredFeatures: ['dom-overlay', 'local', 'local-floor'],
+					optionalFeatures: ['light-estimation'],
+					domOverlay: {
+						root: document.getElementById('main-content'),
+					},
 				}).then((session) => {
 					startARSession(session);
 				}).catch((error) => {
@@ -523,8 +526,12 @@ window.addEventListener("load", async () => {
 			// Make the render size a square
 			const size = Math.min(document.getElementById("center").clientWidth, document.getElementById("center").clientHeight);
 			renderer.setSize(size, size);
-			if (screen.orientation) {
-				document.getElementById('arrow').style.transform = `rotate(${screen.orientation.angle}deg)`;
+			if ((!renderer.xr.enabled) && screen.orientation) {
+				try {
+					document.getElementById('arrow').style.transform = `rotate(${screen.orientation.angle}deg)`;
+				} catch (e) {
+					// Do nothing
+				}
 			}
 
 			// Render the scene

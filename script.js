@@ -211,7 +211,7 @@ window.addEventListener("load", async () => {
 		// Roll and pitch from acceleration
 		// https://stackoverflow.com/a/30195572
 		var Roll = Math.atan2(-X, Math.sqrt(Math.pow(Y, 2) + Math.pow(Z, 2)));
-		var Pitch = Math.atan2(Y, (Z >= 0 ? 1 : -1) * Math.sqrt(Math.pow(Z, 2) + (0.01 * Math.pow(X, 2))));
+		var Pitch = Math.atan2(Y, (Z >= 0 ? 1 : -1) * Math.sqrt(Math.pow(Z, 2) + (0.001 * Math.pow(X, 2))));
 
 		acceleration.roll = Roll;
 		acceleration.pitch = Pitch;

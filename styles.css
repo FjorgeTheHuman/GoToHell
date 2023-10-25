@@ -126,7 +126,8 @@ button {
 }
 
 #location-select-box-button, 
-#ar-toggle-button {
+#ar-toggle-button,
+button {
 	height: 42px;
 	width: 42px;
 	text-align: center;
@@ -161,7 +162,8 @@ button {
 
 button,
 .location-select-box-option > label {
-	transition: background-color 200ms linear;
+	/* A weird bug in Safari requires this transition to be 100ms */
+	transition: background-color 100ms ease-in-out;
 }
 
 .location-select-box-option > label {

@@ -446,7 +446,8 @@ window.addEventListener("load", async () => {
 			// Display error if the device has no compass
 			if (!hdn && !DeviceOrientationEvent.requestPermission) {
 				displayError("compass-no-support", "Your device does not support getting compass headings.");
-				return;
+				// TEST: Override this
+				//return;
 			} else {
 				displayError("compass-no-support");
 			}

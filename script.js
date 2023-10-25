@@ -337,8 +337,8 @@ window.addEventListener("load", async () => {
 				renderer.xr.enabled = true;
 
 				navigator.xr.requestSession('immersive-ar', {
-					requiredFeatures: ['anchors', 'dom-overlay', 'unbounded'],
-					optionalFeatures: ['hit-test', 'light-estimation']
+					requiredFeatures: ['dom-overlay'],
+					optionalFeatures: ['light-estimation']
 				}).then((session) => {
 					startARSession(session);
 				}).catch((error) => {

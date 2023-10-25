@@ -311,8 +311,6 @@ window.addEventListener("load", async () => {
 	renderer.outputColorSpace = THREE.SRGBColorSpace;
 	const loader = new GLTFLoader();
 
-	scene.add(new THREE.AxesHelper(5))
-
 	// Add some light
 	const alight = new THREE.AmbientLight(0x8c8c8c);
 	scene.add(alight);

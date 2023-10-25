@@ -44,7 +44,7 @@ function calcVerticalAngle(lat1, lon1, lat2, lon2) {
 }
 
 function genLocationId(loc) {
-	return `location-option-${loc.name}-${loc.region}-${loc.nation}`.toLowerCase();
+	return `location-option-${loc.name}-${loc.region}-${loc.nation}`.toLowerCase().replace(/\s/g, '-');
 }
 
 window.addEventListener("load", async () => {
@@ -410,7 +410,7 @@ window.addEventListener("load", async () => {
 
 			// Different modes for a device with full sensors, only orientation data, and only compass
 			if (acceleration.roll != null && acceleration.pitch != null) {
-				var yaw_c = hdn + bearing;
+				var yaw_c = hdn - bearing;
 				var pitch_c = sRad(acceleration.pitch);
 				
 				if (pitch_c > (Math.PI / 4) && pitch_c <= (7 * Math.PI / 4)) {
@@ -426,7 +426,7 @@ window.addEventListener("load", async () => {
 				console.warn("No acceleration data. Falling back to orientation API.");
 				var pitch_c = -rotation.pitch - verticalAngle;
 				var roll_c = -rotation.roll;
-				var yaw_c = hdn + bearing;
+				var yaw_c = hdn - bearing;
 
 				if (rotation.pitch > Math.PI / 2 && rotation.pitch < 3 * Math.PI / 2) {
 					roll_c = roll;

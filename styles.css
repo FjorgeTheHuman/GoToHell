@@ -109,6 +109,7 @@ button {
 }
 
 #location-select-form-container {
+	background: #1a1a1a;
 	position: relative;
 }
 
@@ -120,23 +121,32 @@ button {
 	left: 0px;
 }
 
-#location-select-box > span,
-#location-select-box > button {
-	background: #1a1a1a;
+#location-select-box > * {
 	display: inline-block;
 }
 
-#location-select-box-button{
+#location-select-box-button, 
+#ar-toggle-button {
 	height: 42px;
 	width: 42px;
 	text-align: center;
-	position: relative;
 	color: transparent;
 	text-shadow: 0 0 0 white;
-	left: 5px;
 	-webkit-user-select: none; /* Safari */
   -ms-user-select: none; /* IE 10 and IE 11 */
   user-select: none; /* Standard syntax */
+}
+
+#location-select-box-button {
+	left: 5px;
+	position: relative;
+}
+
+#ar-toggle-button {
+	right: 5px;
+	bottom: 5px;
+	position: absolute;
+	border-radius: 50%;
 }
 
 .location-option-selected {
@@ -149,9 +159,9 @@ button {
 	pointer-events: none;
 }
 
-#location-select-box-button,
+button,
 .location-select-box-option > label {
-	transition: background-color 100ms linear;
+	transition: background-color 200ms linear;
 }
 
 .location-select-box-option > label {
@@ -164,32 +174,32 @@ button {
 
 .location-select-box-option > label,
 .location-select-box-option > input:checked ~ label:active,
-#location-select-box-button[aria-checked="false"],
-#location-select-box-button[aria-checked="true"]:active,
-#location-select-box-button[aria-checked="true"]:hover:active {
+button[aria-checked="false"],
+button[aria-checked="true"]:active,
+button[aria-checked="true"]:hover:active {
 	background-color: #1a1a1a;
 }
 
 .location-select-box-option > input:checked ~ label,
 .location-select-box-option > label:active,
 .location-select-box-option > input:checked ~ label:hover:active,
-#location-select-box-button[aria-checked="false"]:active,
-#location-select-box-button[aria-checked="false"]:hover:active,
-#location-select-box-button[aria-checked="true"] {
+button[aria-checked="false"]:active,
+button[aria-checked="false"]:hover:active,
+button[aria-checked="true"] {
 	background-color: #820014;
 }
 
 .location-select-box-option > input:focus-visible ~ label,
 .location-select-box-option > label:hover,
-#location-select-box-button[aria-checked="false"]:focus-visible,
-#location-select-box-button[aria-checked="false"]:hover {
+button[aria-checked="false"]:focus-visible,
+button[aria-checked="false"]:hover {
 	background-color: #404040;
 }
 
 .location-select-box-option > input:checked:focus-visible ~ label,
 .location-select-box-option > input:checked ~ label:hover,
-#location-select-box-button[aria-checked="true"]:focus-visible,
-#location-select-box-button[aria-checked="true"]:hover {
+button[aria-checked="true"]:focus-visible,
+button[aria-checked="true"]:hover {
 	background-color: #a8071a;
 }
 

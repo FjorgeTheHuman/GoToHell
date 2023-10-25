@@ -301,28 +301,49 @@ window.addEventListener("load", async () => {
 
 	// Add handler for AR toggle
 	const ARToggle = document.getElementById('ar-toggle-button');
-	var AREnabled = false;
+	var ARSession = null;
 
 	if (navigator.xr && (await navigator.xr.isSessionSupported('immersive-ar'))) {
 		ARToggle.style = "";
+
+		function startARSession(session) {
+			ARSession = session;
+			ARSession.addEventListener('end', endARSession);
+
+			renderer.xr.enabled = true;
+		}
+
+		function endARSession() {
+			ARSession.removeEventListener('end', startARSession);
+
+			ARSession = null;
+			renderer.xr.enabled = false;
+		}
 
 		ARToggle.addEventListener('click', (event) => {
 			if (ARToggle.ariaChecked === "true") {
 				ARToggle.ariaChecked = "false";
 				ARToggle.setAttribute('aria-checked', 'false');
-
-				AREnabled = false;
 				renderer.xr.enabled = false;
 
-				//disableAR();
+				if (ARSession) {
+					ARSession.end().then(() => {ARSession = null});
+				}
+
 			} else {
 				ARToggle.ariaChecked = "true";
 				ARToggle.setAttribute('aria-checked', 'true');
 
-				AREnabled = true;
 				renderer.xr.enabled = true;
 
-				//enableAR();
+				navigator.xr.requestSession('immersive-ar', {
+					requiredFeatures: ['anchors', 'dom-overlay', 'unbounded'],
+					optionalFeatures: ['hit-test', 'light-estimation']
+				}).then((session) => {
+					startARSession(session);
+				}).catch((error) => {
+					console.error("Something went wrong while trying to start the XR session.");
+				});
 			}
 		});
 	} else {

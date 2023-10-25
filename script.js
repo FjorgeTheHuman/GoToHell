@@ -306,15 +306,17 @@ window.addEventListener("load", async () => {
 	if (navigator.xr && (await navigator.xr.isSessionSupported('immersive-ar'))) {
 		ARToggle.style = "";
 
-		function startARSession(session) {
+		async function startARSession(session) {
 			ARSession = session;
 			ARSession.addEventListener('end', endARSession);
 
 			renderer.xr.enabled = true;
+			await renderer.xr.setSession(session);
+			renderer.xr.setReferenceSpaceType('local');
 		}
 
 		function endARSession() {
-			ARSession.removeEventListener('end', startARSession);
+			ARSession.removeEventListener('end', endARSession);
 
 			renderer.xr.enabled = false;
 			ARSession = null;
@@ -337,7 +339,7 @@ window.addEventListener("load", async () => {
 				renderer.xr.enabled = true;
 
 				navigator.xr.requestSession('immersive-ar', {
-					requiredFeatures: ['dom-overlay'],
+					requiredFeatures: ['dom-overlay', 'local'],
 					optionalFeatures: ['light-estimation']
 				}).then((session) => {
 					startARSession(session);

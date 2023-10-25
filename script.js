@@ -259,7 +259,7 @@ window.addEventListener("load", async () => {
 			} else if (DeviceOrientationEvent.requestPermission) {
 				DeviceOrientationEvent.requestPermission().then(handleResponse).catch(() => {
 					// No warning yet
-				};
+				});
 			};
 		};
 

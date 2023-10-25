@@ -1,6 +1,8 @@
 import * as THREE from 'three';
 import WebGL from 'three/addons/capabilities/WebGL.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import WebXRPolyfill from 'webxr-polyfill';
+const polyfill = new WebXRPolyfill();
 
 // Ensuring radians are positive and between 0 and 2pi
 function sRad(rad) {
@@ -90,25 +92,6 @@ window.addEventListener("load", async () => {
 			locationSelectBox.className = "out";
 		}
 	});
-
-	// Add handler for AR toggle
-	const ARToggle = document.getElementById('ar-toggle-button');
-
-	if (navigator.xr && (await navigator.xr.isSessionSupported('immersive-ar'))) {
-		ARToggle.style = "";
-
-		ARToggle.addEventListener('click', (event) => {
-			if (ARToggle.ariaChecked === "true") {
-				ARToggle.ariaChecked = "false";
-				ARToggle.setAttribute('aria-checked', 'false');
-			} else {
-				ARToggle.ariaChecked = "true";
-				ARToggle.setAttribute('aria-checked', 'true');
-			}
-		});
-	} else {
-		console.info("WebXR AR is not supported.");
-	}
 
 	// Variables for current device data
 	var latitude = null;
@@ -276,7 +259,7 @@ window.addEventListener("load", async () => {
 			} else if (DeviceOrientationEvent.requestPermission) {
 				DeviceOrientationEvent.requestPermission().then(handleResponse).catch(() => {
 					// No warning yet
-				});
+				};
 			};
 		};
 
@@ -312,9 +295,39 @@ window.addEventListener("load", async () => {
 	// Create the required three.js objects
 	const scene = new THREE.Scene();
 	const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 10.1);
-	const renderer = new THREE.WebGLRenderer({ antialias: true });
+	const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
 	renderer.outputColorSpace = THREE.SRGBColorSpace;
 	const loader = new GLTFLoader();
+
+	// Add handler for AR toggle
+	const ARToggle = document.getElementById('ar-toggle-button');
+	var AREnabled = false;
+
+	if (navigator.xr && (await navigator.xr.isSessionSupported('immersive-ar'))) {
+		ARToggle.style = "";
+
+		ARToggle.addEventListener('click', (event) => {
+			if (ARToggle.ariaChecked === "true") {
+				ARToggle.ariaChecked = "false";
+				ARToggle.setAttribute('aria-checked', 'false');
+
+				AREnabled = false;
+				renderer.xr.enabled = false;
+
+				//disableAR();
+			} else {
+				ARToggle.ariaChecked = "true";
+				ARToggle.setAttribute('aria-checked', 'true');
+
+				AREnabled = true;
+				renderer.xr.enabled = true;
+
+				//enableAR();
+			}
+		});
+	} else {
+		console.info("WebXR AR is not supported.");
+	}
 
 	// Add some light
 	const alight = new THREE.AmbientLight(0x8c8c8c);
@@ -436,8 +449,9 @@ window.addEventListener("load", async () => {
 
 				// NOTE: Z points up, X points right, Y points forwards
 				//       That means Z is yaw, X is pitch, Y is roll
-				const rot = new THREE.Euler(sRad(- acceleration.pitch - verticalAngle), sRad(Math.PI - acceleration.roll), sRad(yaw_c), 'XYZ');
+				const rot = new THREE.Euler(sRad(-acceleration.pitch), sRad(Math.PI - acceleration.roll), sRad(yaw_c), 'XYZ');
 				model.setRotationFromEuler(rot);
+				model.rotateX(sRad(-verticalAngle));
 			} else if (rotation.pitch != null && rotation.roll != null) {
 				displayWarning('motion-no-support', 'Due to your device\'s capabilities, there may be a large error in roll when the device is oriented vertically.');
 				console.warn("No acceleration data. Falling back to orientation API.");

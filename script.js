@@ -21,42 +21,80 @@ const EARTH_RADIUS = 6371;
 function calcDistance(lat1, lon1, lat2, lon2) {
 	// Haversign formula
 	// https://en.wikipedia.org/wiki/Haversine_formula
-	const dlon = lon2 - lon1;
-	const dlat = lat2 - lat1;
+	const dLon = lon2 - lon1;
+	const dLat = lat2 - lat1;
 
-	const a = Math.pow(Math.sin(dlat / 2), 2) + Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin(dlon / 2), 2);
+	const a = Math.pow(Math.sin(dLat / 2), 2) + Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin(dLon / 2), 2);
 
 	return EARTH_RADIUS * 2 * Math.asin(Math.sqrt(a));
 };
 
 function calcBearing(lat1, lon1, lat2, lon2) {
-	// Spherical law of cosines
-	// https://www.askamathematician.com/2018/07/q-given-two-points-on-the-globe-how-do-you-figure-out-the-direction-and-distance-to-each-other
-	const distance = calcDistance(lat1, lon1, lat2, lon2);
+	// https://www.igismap.com/what-is-bearing-angle-and-calculate-between-two-points/
+	const dL = lon2 - lon1;
 
-	const theta_1 = Math.PI / 2 - lat1;
-	const theta_2 = Math.PI / 2 - lat2;
+	const X = Math.cos(lat2) * Math.sin(dL);
+	const Y = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(dL);
 
-	const phi = distance / EARTH_RADIUS;
-	
-	return Math.acos((Math.cos(theta_2) - Math.cos(theta_1) * Math.cos(phi)) / (Math.sin(theta_1) * Math.sin(phi)));
+	return Math.atan2(X, Y);
 };
 
 function calcVerticalAngle(lat1, lon1, lat2, lon2) {
 	return degToRad((calcDistance(lat1, lon1, lat2, lon2) / (2 * Math.PI * EARTH_RADIUS)) * 360) / 2;
 }
 
-window.addEventListener("load", () => {
+function genLocationId(loc) {
+	return `location-option-${loc.name}-${loc.region}-${loc.nation}`.toLowerCase().replace(/\s/g, '-');
+}
+
+window.addEventListener("load", async () => {
 	const canVibrate = ('vibrate' in window.navigator);
 
-	// Constants
-	const hell_latitude = degToRad(42.4338);
-	const hell_longitude = degToRad(-83.9845);
+	// Fetch location data JSON
+  const data = JSON.parse(await (await fetch(new Request('./static/locations.json'))).text());
+
+	// Populate menu of locations
+	for (let i = -1; i < data.locations.length; i++) {
+		let name;
+		let id;
+
+		if (i == -1) {
+			name = "Closest";
+			id = name.toLowerCase();
+		} else {
+			name = `${data.locations[i].region}, ${data.locations[i].nation}`;
+			id = genLocationId(data.locations[i]);
+		}
+
+		const str = `<div class="location-select-box-option"><input id="${id}" type="radio" name="location" value="${i}"${i == -1 ? 'checked="checked"' : ''}><label for="${id}">${name}</label></div>`;
+
+		const template = document.createElement('template');
+		template.innerHTML = str;
+
+		document.getElementById('location-select-form').prepend(template.content.firstChild);
+	}
+
+	// Add handler for location menu toggle
+	const locationSelectForm = document.getElementById('location-select-form');
+	const locationSelectToggle = document.getElementById('location-select-box-button');
+	const locationSelectBox = document.getElementById('location-select-box');
+
+	locationSelectToggle.addEventListener('click', (event) => {
+		if (locationSelectToggle.ariaChecked === "true") {
+			locationSelectToggle.ariaChecked = "false";
+			locationSelectToggle.setAttribute('aria-checked', 'false');
+			locationSelectBox.className = "in";
+		} else {
+			locationSelectToggle.ariaChecked = "true";
+			locationSelectToggle.setAttribute('aria-checked', 'true');
+			locationSelectBox.className = "out";
+		}
+	});
 
 	// Variables for current device data
-	var latitude;
-	var longitude;
-	var heading;
+	var latitude = null;
+	var longitude = null;
+	var heading = null;
 	const rotation = {
 		yaw: null,
 		pitch: null,
@@ -173,7 +211,7 @@ window.addEventListener("load", () => {
 		// Roll and pitch from acceleration
 		// https://stackoverflow.com/a/30195572
 		var Roll = Math.atan2(-X, Math.sqrt(Math.pow(Y, 2) + Math.pow(Z, 2)));
-		var Pitch = Math.atan2(Y, (Z >= 0 ? 1 : -1) * Math.sqrt(Math.pow(Z, 2) + (0.01 * Math.pow(X, 2))));
+		var Pitch = Math.atan2(Y, (Z >= 0 ? 1 : -1) * Math.sqrt(Math.pow(Z, 2) + (0.001 * Math.pow(X, 2))));
 
 		acceleration.roll = Roll;
 		acceleration.pitch = Pitch;
@@ -247,11 +285,9 @@ window.addEventListener("load", () => {
 
 	// Lock orientation to portrait if possible
 	if ('lock' in screen.orientation) {
-		try {
-			screen.orientation.lock('natural');
-		} catch (e) {
-			console.error(e);
-		}
+		screen.orientation.lock('natural').catch((error) => {
+			console.error(error);
+		});
 	}
 
 	// Create the required three.js objects
@@ -298,15 +334,60 @@ window.addEventListener("load", () => {
 		// Render the scene
 		renderer.render(scene, camera);
 
-		// Draw the arrow on the canvas
-		function displayArrow() {
+		// Update all the displays
+		function updateDisplays() {
 			// Call function every frame
-			requestAnimationFrame(displayArrow);
+			requestAnimationFrame(updateDisplays);
 
-			// Get distance between user and hell
-			const distance = calcDistance(latitude, longitude, hell_latitude, hell_longitude);
-			const bearing = calcBearing(latitude, longitude, hell_latitude, hell_longitude);
-			const verticalAngle = calcVerticalAngle(latitude, longitude, hell_latitude, hell_longitude);
+			// Find the angles and distance to the selected location
+			let loc = parseInt(locationSelectForm.elements.location.value);
+			let distance;
+			let bearing;
+			let verticalAngle;
+
+			if (loc === -1) {
+				if (latitude != null && longitude != null) {
+					// Find the closest location
+					loc = 0;
+					distance = Number.MAX_SAFE_INTEGER;
+					for (let i = 0; i < data.locations.length; i++) {
+						const locLatitude = degToRad(data.locations[i].latitude);
+						const locLongitude = degToRad(data.locations[i].longitude);
+
+						const iDistance = calcDistance(latitude, longitude, locLatitude, locLongitude);
+
+						if (iDistance <= distance) {
+							loc = i;
+							distance = iDistance;
+							bearing = calcBearing(latitude, longitude, locLatitude, locLongitude);
+							verticalAngle = calcVerticalAngle(latitude, longitude, locLatitude, locLongitude);
+						}
+					}
+				}
+			} else {
+				// Use the selected location
+				const locLatitude = degToRad(data.locations[loc].latitude);
+				const locLongitude = degToRad(data.locations[loc].longitude);
+
+				distance = calcDistance(latitude, longitude, locLatitude, locLongitude);
+				bearing = calcBearing(latitude, longitude, locLatitude, locLongitude);
+				verticalAngle = calcVerticalAngle(latitude, longitude, locLatitude, locLongitude);
+			}
+
+			if (loc >= 0) {
+				// Update links and references to hell
+				document.getElementById('hell-name').setAttribute('title', `${data.locations[loc].name}, ${data.locations[loc].region}, ${data.locations[loc].nation}`);
+				document.getElementById('hell-link').setAttribute('href', `${data.locations[loc].url}`);
+
+				// Display which location is being selected
+				$('.location-select-box-option > label').removeClass("location-option-selected");
+				$(`.location-select-box-option > input#${genLocationId(data.locations[loc])} ~ label`).addClass('location-option-selected');
+
+				// Set distance to hell
+				if (latitude != null && longitude != null) {
+					document.getElementById('distance').innerHTML = `${distance.toFixed(2).toLocaleString()}km`;
+				}
+			}
 
 			// Get compass heading
 			const hdn = rotation.yaw || heading;
@@ -329,7 +410,7 @@ window.addEventListener("load", () => {
 
 			// Different modes for a device with full sensors, only orientation data, and only compass
 			if (acceleration.roll != null && acceleration.pitch != null) {
-				var yaw_c = hdn + bearing;
+				var yaw_c = hdn - bearing;
 				var pitch_c = sRad(acceleration.pitch);
 				
 				if (pitch_c > (Math.PI / 4) && pitch_c <= (7 * Math.PI / 4)) {
@@ -345,7 +426,7 @@ window.addEventListener("load", () => {
 				console.warn("No acceleration data. Falling back to orientation API.");
 				var pitch_c = -rotation.pitch - verticalAngle;
 				var roll_c = -rotation.roll;
-				var yaw_c = hdn + bearing;
+				var yaw_c = hdn - bearing;
 
 				if (rotation.pitch > Math.PI / 2 && rotation.pitch < 3 * Math.PI / 2) {
 					roll_c = roll;
@@ -368,7 +449,7 @@ window.addEventListener("load", () => {
 			} else {
 				model.rotation.x = 0;
 				model.rotation.y = 0;
-				model.rotation.z = hdn + bearing;
+				model.rotation.z = hdn - bearing;
 			}
 
 			// Vibrate if possible and arrow is close enough
@@ -395,7 +476,7 @@ window.addEventListener("load", () => {
 		};
 
 		// Draw the arrow
-		displayArrow();
+		updateDisplays();
 	}, undefined, function (error) {
 		console.error(error);
 	});

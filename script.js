@@ -91,6 +91,20 @@ window.addEventListener("load", async () => {
 		}
 	});
 
+	// Add handler for AR toggle
+	const ARToggle = document.getElementById('ar-toggle-button');
+
+	ARToggle.addEventListener('click', (event) => {
+		if (ARToggle.ariaChecked === "true") {
+			ARToggle.ariaChecked = "false";
+			ARToggle.setAttribute('aria-checked', 'false');
+		} else {
+			ARToggle.ariaChecked = "true";
+			ARToggle.setAttribute('aria-checked', 'true');
+		}
+	});
+
+
 	// Variables for current device data
 	var latitude = null;
 	var longitude = null;
@@ -233,7 +247,7 @@ window.addEventListener("load", async () => {
 
 	// Get accelerometer and orientation data
 	if (DeviceOrientationEvent.requestPermission || DeviceMotionEvent.requestPermission) {
-		console.info("Requesting permission for device orientation using Safari API.")
+		console.info("Requesting permission for device orientation using Safari API.");
 
 		const request = document.getElementById("message-ask-orient-perm");
 

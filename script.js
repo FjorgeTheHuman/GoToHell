@@ -374,6 +374,8 @@ window.addEventListener("load", async () => {
 				verticalAngle = calcVerticalAngle(latitude, longitude, locLatitude, locLongitude);
 			}
 
+			console.debug(bearing);
+
 			if (loc >= 0) {
 				// Update links and references to hell
 				document.getElementById('hell-name').setAttribute('title', `${data.locations[loc].name}, ${data.locations[loc].region}, ${data.locations[loc].nation}`);

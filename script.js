@@ -455,7 +455,7 @@ window.addEventListener("load", async () => {
 			} else if (rotation.pitch != null && rotation.roll != null) {
 				displayWarning('motion-no-support', 'Due to your device\'s capabilities, there may be a large error in roll when the device is oriented vertically.');
 				console.warn("No acceleration data. Falling back to orientation API.");
-				var pitch_c = -rotation.pitch - verticalAngle;
+				var pitch_c = -rotation.pitch;
 				var roll_c = -rotation.roll;
 				var yaw_c = hdn - bearing;
 
@@ -469,7 +469,7 @@ window.addEventListener("load", async () => {
 					roll_c = -roll_c + Math.PI;
 				}
 
-				if (rotation.pitch > (3 * Math.PI / 4) && rotation.pitch < (5 * Math.PI / 4)) {
+				if (sRad(rotation.pitch) > (Math.PI / 4) && sRad(rotation.pitch) <= (7 * Math.PI / 4)) {
 					yaw_c = yaw_c + Math.PI;
 				}
 
@@ -477,6 +477,7 @@ window.addEventListener("load", async () => {
 				//       That means Z is yaw, X is pitch, Y is roll
 				const rot = new THREE.Euler(sRad(pitch_c), sRad(roll_c), sRad(yaw_c), 'XYZ');
 				model.setRotationFromEuler(rot);
+				model.rotateX(sRad(-verticalAngle));
 			} else {
 				model.rotation.x = 0;
 				model.rotation.y = 0;

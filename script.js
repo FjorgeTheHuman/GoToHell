@@ -310,9 +310,9 @@ window.addEventListener("load", async () => {
 			ARSession = session;
 			ARSession.addEventListener('end', endARSession);
 
-			renderer.xr.enabled = true;
 			await renderer.xr.setSession(session);
 			renderer.xr.setReferenceSpaceType('local');
+			renderer.xr.enabled = true;
 		}
 
 		function endARSession() {
@@ -359,10 +359,9 @@ window.addEventListener("load", async () => {
 	const alight = new THREE.AmbientLight(0x8c8c8c);
 	scene.add(alight);
 
-	// Position camera away from arrow
-	camera.position.z = 5;
-
+	// Add renderer to DOM
 	renderer.domElement.id = 'arrow';
+	document.getElementById('arrow').replaceWith(renderer.domElement);
 
 	// Load the arrow
 	loader.load('static/arrow.gltf', function (gltf) {
@@ -376,6 +375,7 @@ window.addEventListener("load", async () => {
 		});
 
 		scene.add(model);
+		model.position.z = -5;
 
 		// Add a light to the model
 		const light = new THREE.PointLight(0xa6a6a6, 10);
@@ -391,11 +391,6 @@ window.addEventListener("load", async () => {
 
 		// Update all the displays
 		function updateDisplays() {
-			// Add the arrow display to the dom if it isn't
-			if (document.getElementById('arrow') && document.getElementById('arrow') !== renderer.domElement) {
-				document.getElementById('arrow').replaceWith(renderer.domElement);
-			}
-
 			// Call function every frame
 			renderer.setAnimationLoop(updateDisplays);
 

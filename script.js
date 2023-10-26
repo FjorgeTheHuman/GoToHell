@@ -311,7 +311,7 @@ window.addEventListener("load", async () => {
 			ARSession.addEventListener('end', endARSession);
 
 			await renderer.xr.setSession(session);
-			renderer.xr.setReferenceSpaceType('local');
+			renderer.xr.setReferenceSpaceType('viewer');
 			renderer.xr.enabled = true;
 		}
 
@@ -342,8 +342,8 @@ window.addEventListener("load", async () => {
 				renderer.xr.enabled = true;
 
 				navigator.xr.requestSession('immersive-ar', {
-					requiredFeatures: ['dom-overlay', 'local', 'local-floor'],
-					optionalFeatures: ['dom-overlay', 'light-estimation'],
+					requiredFeatures: ['dom-overlay', 'viewer'],
+					optionalFeatures: ['dom-overlay', 'viewer', 'light-estimation'],
 					domOverlay: {
 						root: document.getElementById('main-content'),
 					},

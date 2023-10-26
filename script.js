@@ -392,7 +392,7 @@ window.addEventListener("load", async () => {
 		// Update all the displays
 		function updateDisplays() {
 			// Add the arrow display to the dom if it isn't
-			if (document.getElementById('arrow') !== renderer.domElement) {
+			if (document.getElementById('arrow') && document.getElementById('arrow') !== renderer.domElement) {
 				document.getElementById('arrow').replaceWith(renderer.domElement);
 			}
 

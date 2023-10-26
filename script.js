@@ -340,7 +340,7 @@ window.addEventListener("load", async () => {
 
 				navigator.xr.requestSession('immersive-ar', {
 					requiredFeatures: ['dom-overlay', 'local', 'local-floor'],
-					optionalFeatures: ['light-estimation'],
+					optionalFeatures: ['dom-overlay', 'light-estimation'],
 					domOverlay: {
 						root: document.getElementById('main-content'),
 					},

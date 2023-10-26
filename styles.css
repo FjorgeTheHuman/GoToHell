@@ -37,13 +37,14 @@ button {
 	align-items: stretch;
 	padding: 0px;
 	margin: 0px;
+	pointer-events: none;
 }
 
 #main-content > * {
 	z-index: inherit;
 }
 
-#main-content :not(#center) {
+#main-content * {
 	pointer-events: auto;
 }
 
@@ -100,6 +101,10 @@ button {
 	z-index: 100;
 }
 
+#message-box * {
+	pointer-events: auto;
+}
+
 #distance-box {
 	position: absolute;
 	left: 0;
@@ -143,6 +148,12 @@ button {
 	display: inline-block;
 }
 
+#location-select-box-button {
+	-webkit-user-select: none; /* Safari */
+	-ms-user-select: none; /* IE 10 and IE 11 */
+	user-select: none; /* Standard syntax */
+}
+
 #location-select-box-button, 
 #ar-toggle-button,
 button {
@@ -151,9 +162,6 @@ button {
 	text-align: center;
 	color: transparent;
 	text-shadow: 0 0 0 white;
-	-webkit-user-select: none; /* Safari */
-  -ms-user-select: none; /* IE 10 and IE 11 */
-  user-select: none; /* Standard syntax */
 }
 
 #location-select-box-button {

@@ -362,8 +362,7 @@ window.addEventListener("load", async () => {
 	// Position camera away from arrow
 	camera.position.z = 5;
 
-	document.getElementById("center").appendChild(renderer.domElement);
-	renderer.domElement.id = "arrow";
+	renderer.domElement.id = 'arrow';
 
 	// Load the arrow
 	loader.load('static/arrow.gltf', function (gltf) {
@@ -392,6 +391,11 @@ window.addEventListener("load", async () => {
 
 		// Update all the displays
 		function updateDisplays() {
+			// Add the arrow display to the dom if it isn't
+			if (document.getElementById('arrow') !== renderer.domElement) {
+				document.getElementById('arrow').replaceWith(renderer.domElement);
+			}
+
 			// Call function every frame
 			renderer.setAnimationLoop(updateDisplays);
 

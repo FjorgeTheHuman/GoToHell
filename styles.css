@@ -12,6 +12,7 @@ body {
 	color: rgb(200, 200, 200);
 	padding: 0px;
 	margin: 0px;
+	overflow: hidden;
 }
 
 button {
@@ -38,8 +39,17 @@ button {
 	margin: 0px;
 }
 
+#main-content > * {
+	z-index: inherit;
+}
+
+#main-content :not(#center) {
+	pointer-events: auto;
+}
+
 #center {
-	background: #transparent;
+	pointer-events: none;
+	background: transparent;
 	display: flex;
 	flex-grow: 100;
 	overflow: hidden;

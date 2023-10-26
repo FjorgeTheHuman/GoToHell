@@ -320,6 +320,9 @@ window.addEventListener("load", async () => {
 
 			renderer.xr.enabled = false;
 			ARSession = null;
+
+			// Reset camera
+			camera = new THREE.PerspectiveCamera(75, 1, 0.1, 10.1);
 		}
 
 		ARToggle.addEventListener('click', (event) => {

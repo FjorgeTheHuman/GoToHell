@@ -310,8 +310,8 @@ window.addEventListener("load", async () => {
 			ARSession = session;
 			ARSession.addEventListener('end', endARSession);
 
-			await renderer.xr.setSession(session);
 			renderer.xr.setReferenceSpaceType('viewer');
+			await renderer.xr.setSession(session);
 			renderer.xr.enabled = true;
 		}
 

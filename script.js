@@ -351,6 +351,9 @@ window.addEventListener("load", async () => {
 					startARSession(session);
 				}).catch((error) => {
 					console.error("Something went wrong while trying to start the XR session.");
+
+					ARToggle.style.display = "none";
+					ARToggle.style.pointerEvents = "none";
 				});
 			}
 		});

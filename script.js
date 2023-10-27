@@ -310,7 +310,7 @@ window.addEventListener("load", async () => {
 			ARSession = session;
 			ARSession.addEventListener('end', endARSession);
 
-			renderer.xr.setReferenceSpaceType('viewer');
+			renderer.xr.setReferenceSpaceType('local');
 			await renderer.xr.setSession(session);
 			renderer.xr.enabled = true;
 		}
@@ -342,8 +342,8 @@ window.addEventListener("load", async () => {
 				renderer.xr.enabled = true;
 
 				navigator.xr.requestSession('immersive-ar', {
-					requiredFeatures: ['dom-overlay', 'viewer'],
-					optionalFeatures: ['dom-overlay', 'viewer', 'light-estimation'],
+					requiredFeatures: ['dom-overlay', 'local'],
+					optionalFeatures: ['dom-overlay', 'local', 'light-estimation'],
 					domOverlay: {
 						root: document.getElementById('main-content'),
 					},
@@ -377,13 +377,19 @@ window.addEventListener("load", async () => {
 			if (o.isMesh) o.material = newMaterial;
 		});
 
-		scene.add(model);
+		// Create a group for the model
+		const arrowGroup = new THREE.Group();
+
+		arrowGroup.add(model);
 		model.position.z = -5;
 
 		// Add a light to the model
 		const light = new THREE.PointLight(0xa6a6a6, 10);
 		light.position.set(0, 1, 7.5);
-		model.add(light);
+		arrowGroup.add(light);
+
+		// Add group to scene
+		scene.add(arrowGroup);
 		
 		// Make the render size a square
 		const size = Math.min(document.getElementById("center").clientWidth, document.getElementById("center").clientHeight);
@@ -479,8 +485,8 @@ window.addEventListener("load", async () => {
 				// NOTE: Z points up, X points right, Y points forwards
 				//       That means Z is yaw, X is pitch, Y is roll
 				const rot = new THREE.Euler(sRad(-acceleration.pitch), sRad(Math.PI - acceleration.roll), sRad(yaw_c), 'XYZ');
-				model.setRotationFromEuler(rot);
-				model.rotateX(sRad(-verticalAngle));
+				arrowGroup.setRotationFromEuler(rot);
+				arrowGroup.rotateX(sRad(-verticalAngle));
 			} else if (rotation.pitch != null && rotation.roll != null) {
 				displayWarning('motion-no-support', 'Due to your device\'s capabilities, there may be a large error in roll when the device is oriented vertically.');
 				console.warn("No acceleration data. Falling back to orientation API.");
@@ -505,12 +511,12 @@ window.addEventListener("load", async () => {
 				// NOTE: Z points up, X points right, Y points forwards
 				//       That means Z is yaw, X is pitch, Y is roll
 				const rot = new THREE.Euler(sRad(pitch_c), sRad(roll_c), sRad(yaw_c), 'XYZ');
-				model.setRotationFromEuler(rot);
-				model.rotateX(sRad(-verticalAngle));
+				arrowGroup.setRotationFromEuler(rot);
+				arrowGroup.rotateX(sRad(-verticalAngle));
 			} else {
-				model.rotation.x = 0;
-				model.rotation.y = 0;
-				model.rotation.z = hdn - bearing;
+				arrowGroup.rotation.x = 0;
+				arrowGroup.rotation.y = 0;
+				arrowGroup.rotation.z = hdn - bearing;
 			}
 
 			// Vibrate if possible and arrow is close enough

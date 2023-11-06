@@ -375,7 +375,7 @@ window.addEventListener("load", async () => {
 		model.scale.set(0.3, 0.3, 0.3);
 
 		// Replace model material
-		var newMaterial = new THREE.MeshStandardMaterial({color: 0xa6a6a6});
+		var newMaterial = new THREE.MeshStandardMaterial({color: 0xff7875});
 		model.traverse((o) => {
 			if (o.isMesh) o.material = newMaterial;
 		});
@@ -398,7 +398,7 @@ window.addEventListener("load", async () => {
 		arrowGroup.add(yellowLightBottom);
 
 		// Add a light to the group
-		const light = new THREE.PointLight(0xffec3d, 7);
+		const light = new THREE.PointLight(0x1a1a1a, 7);
 		light.position.set(0, 4, 3);
 		arrowGroup.add(light);
 

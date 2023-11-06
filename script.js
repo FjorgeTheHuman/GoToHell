@@ -385,15 +385,15 @@ window.addEventListener("load", async () => {
 		arrowGroup.add(model);
 
 		// Add some yellow lights to the group
-		const yellowLightFront = new THREE.PointLight(0xd4b106, 3);
+		const yellowLightFront = new THREE.PointLight(0xad8b00, 3);
 		yellowLightFront.position.set(0, 2.75, 0);
 		arrowGroup.add(yellowLightFront);
 
-		const yellowLightTop = new THREE.PointLight(0xd4b106, 3);
+		const yellowLightTop = new THREE.PointLight(0xad8b00, 3);
 		yellowLightTop.position.set(0, 2.5, 0.2);
 		arrowGroup.add(yellowLightTop);
 
-		const yellowLightBottom = new THREE.PointLight(0xd4b106, 3);
+		const yellowLightBottom = new THREE.PointLight(0xad8b00, 3);
 		yellowLightBottom.position.set(0, 2.5, -0.2);
 		arrowGroup.add(yellowLightBottom);
 

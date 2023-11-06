@@ -337,7 +337,7 @@ window.addEventListener("load", async () => {
 					}
 				};
 				if (supportedConstraints.facingMode) {
-					contraints.facingMode = "environment";
+					contraints.video = {facingMode: "environment"};
 				}
 
 

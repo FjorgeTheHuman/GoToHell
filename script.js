@@ -303,7 +303,7 @@ window.addEventListener("load", async () => {
 	const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
 	renderer.outputColorSpace = THREE.SRGBColorSpace;
 	const controls = new OrbitControls(camera, document.getElementById('controls-overlay'));
-	//controls.enabled = false;
+	controls.enabled = false;
 	controls.enablePan = false;
 	controls.enableRotate = false;
 	controls.enableDamping = true;
@@ -358,7 +358,7 @@ window.addEventListener("load", async () => {
 						WebCamToggle.ariaChecked = "false";
 						WebCamToggle.setAttribute('aria-checked', 'false');
 
-						//controls.enabled = false;
+						controls.enabled = false;
 						controls.reset();
 
 						if (stream) {
@@ -373,6 +373,7 @@ window.addEventListener("load", async () => {
 						}
 					} else {
 						try {
+							// TODO: Make camera seletion select highest quality one
 							stream = await navigator.mediaDevices.getUserMedia(contraints);
 						} catch (error) {
 							if (error instanceof NotAllowedError) {

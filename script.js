@@ -332,7 +332,7 @@ window.addEventListener("load", async () => {
 						const tracks = stream.getVideoTracks();
 
 						for (const track of tracks) {
-							track.applyContraints({aspectRatio: (WebCamDisplay.scrollWidth / WebCamDisplay.scrollHeight)});
+							track.applyConstraints({aspectRatio: (WebCamDisplay.scrollWidth / WebCamDisplay.scrollHeight)});
 						}
 					}
 				};
@@ -568,8 +568,7 @@ window.addEventListener("load", async () => {
 
 			// Display error if the device has no geolocation
 			if (latitude == null && longitude == null) {
-				// displayError("geo-no-support", "Your device does not support geolocation.");
-				// return;
+				return;
 			} else {
 				displayError("geo-no-support");
 			}

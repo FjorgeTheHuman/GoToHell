@@ -309,7 +309,7 @@ window.addEventListener("load", async () => {
 	controls.enableDamping = true;
 	controls.enableZoom = true;
 	controls.maxDistance = 20;
-	controls.minDistance = 0.5;
+	controls.minDistance = 4;
 	controls.target = new THREE.Vector3(0, 0, -5);
 	controls.saveState();
 	const loader = new GLTFLoader();

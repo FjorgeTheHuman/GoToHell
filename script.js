@@ -384,14 +384,22 @@ window.addEventListener("load", async () => {
 		const arrowGroup = new THREE.Group();
 		arrowGroup.add(model);
 
-		// Add a yellow light to the group
-		const yellowLight = new THREE.PointLight(0xad8b00, 10);
-		yellowLight.position.set(0, 5, 0);
-		arrowGroup.add(yellowLight);
+		// Add some yellow lights to the group
+		const yellowLightFront = new THREE.PointLight(0xad8b00, 15);
+		yellowLightFront.position.set(0, 5, 0);
+		arrowGroup.add(yellowLightFront);
+
+		const yellowLightTop = new THREE.PointLight(0xad8b00, 15);
+		yellowLightTop.position.set(0, 5, 2);
+		arrowGroup.add(yellowLightTop);
+
+		const yellowLightBottom = new THREE.PointLight(0xad8b00, 15);
+		yellowLightBottom.position.set(0, 5, -2);
+		arrowGroup.add(yellowLightBottom);
 
 		// Add a light to the group
 		const light = new THREE.PointLight(0xf5222d, 5);
-		light.position.set(0, 5, 7.5);
+		light.position.set(0, 4, 3);
 		arrowGroup.add(light);
 
 		// Add group to scene

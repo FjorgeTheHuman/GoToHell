@@ -382,9 +382,7 @@ window.addEventListener("load", async () => {
 
 		// Create a group for the model
 		const arrowGroup = new THREE.Group();
-
 		arrowGroup.add(model);
-		arrowGroup.position.z = -5;
 
 		// Add a light to the model
 		const light = new THREE.PointLight(0xa6a6a6, 10);
@@ -392,6 +390,7 @@ window.addEventListener("load", async () => {
 		arrowGroup.add(light);
 
 		// Add group to scene
+		arrowGroup.position.z = -5;
 		scene.add(arrowGroup);
 		
 		// Make the render size a square

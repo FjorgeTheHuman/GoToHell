@@ -61,6 +61,14 @@ button {
 	aspect-ratio: 1/1;
 	height: 100%;
 	margin: auto;
+	pointer-events: none;
+}
+
+#webcam {
+	height: 100%;
+	width: 100%;
+	position: absolute;
+	z-index: -1;
 }
 
 #top-bar, #bottom-bar {
@@ -114,16 +122,20 @@ button {
 	z-index: 50;
 }
 
-#location-select-box {
+#location-select-box,
+#camera-control-buttons {
 	position: absolute;
-	left: 0;
 	bottom: 5px;
 	width: fit-content;
 	height: fit-content;
 	z-index: 75;
-	transition: transform 300ms ease-in-out;
 	display: flex;
 	align-items: flex-end;
+}
+
+#location-select-box {
+	left: 0;
+	transition: transform 300ms ease-in-out;
 }
 
 #location-select-form {
@@ -148,14 +160,15 @@ button {
 	display: inline-block;
 }
 
-#location-select-box-button {
+#location-select-box-button,
+#camera-control-buttons button {
 	-webkit-user-select: none; /* Safari */
 	-ms-user-select: none; /* IE 10 and IE 11 */
 	user-select: none; /* Standard syntax */
 }
 
 #location-select-box-button, 
-#ar-toggle-button,
+#camera-control-buttons button,
 button {
 	height: 42px;
 	width: 42px;
@@ -169,10 +182,15 @@ button {
 	position: relative;
 }
 
-#ar-toggle-button {
-	right: 5px;
-	bottom: 5px;
+#camera-control-buttons {
+	right: 0px;
+	bottom: 0px;
 	position: absolute;
+	padding: 5px;
+	gap: 5px;
+}
+
+#camera-control-buttons button {
 	border-radius: 50%;
 }
 

@@ -362,7 +362,7 @@ window.addEventListener("load", async () => {
 	}
 
 	// Add some light
-	const alight = new THREE.AmbientLight(0xcf1322);
+	const alight = new THREE.AmbientLight(0xa8071a);
 	scene.add(alight);
 
 	// Add renderer to DOM
@@ -385,12 +385,12 @@ window.addEventListener("load", async () => {
 		arrowGroup.add(model);
 
 		// Add a yellow light to the model
-		const yellowLight = new THREE.PointLight(0xad8b00, 15);
-		yellowLight.position.set(0, -5, 0);
+		const yellowLight = new THREE.PointLight(0xad8b00, 10);
+		yellowLight.position.set(0, 5, 0);
 		model.add(yellowLight);
 
 		// Add a light to the group
-		const light = new THREE.PointLight(0xfadb14, 10);
+		const light = new THREE.PointLight(0xcf1322, 5);
 		light.position.set(0, -5, 7.5);
 		arrowGroup.add(light);
 

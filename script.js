@@ -384,8 +384,13 @@ window.addEventListener("load", async () => {
 		const arrowGroup = new THREE.Group();
 		arrowGroup.add(model);
 
-		// Add a light to the model
-		const light = new THREE.PointLight(0xa6a6a6, 10);
+		// Add an orange light to the model
+		const orangeLight = new THREE.PointLight(0xfa8c16, 20);
+		orangeLight.position.set(0, 0, 5);
+		model.add(orangeLight);
+
+		// Add a light to the group
+		const light = new THREE.PointLight(0xa6a6a6, 15);
 		light.position.set(0, 1, 7.5);
 		arrowGroup.add(light);
 

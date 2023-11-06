@@ -2,7 +2,7 @@
 > — Belinda Carlisle
 
 # Overview
-This is a simple website that tells people how to go to Hell.
+This is a website that tells people how to go to Hell.
 
 ## Hells
 There are four circles of hell:
@@ -14,6 +14,9 @@ There are four circles of hell:
 <sup>Sorry Dante!</sup>
 
 The site will automatically select the closest one, but it's possible to choose one manually.
+
+## Camera Mode
+The site can display live video from your camera behind the arrow to hell.
 
 ## Notes
 - Only tested on iPhones

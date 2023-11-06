@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import WebGL from 'three/addons/capabilities/WebGL.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import WebXRPolyfill from 'webxr-polyfill';
 const polyfill = new WebXRPolyfill();
 
@@ -300,10 +301,27 @@ window.addEventListener("load", async () => {
 	const scene = new THREE.Scene();
 	let camera = new THREE.PerspectiveCamera(75, 1, 0.1, 10.1);
 	const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+	const controls = new OrbitControls(camera, document.getElementById('center'));
+	controls.enabled = false;
+	controls.enablePan = false;
+	controls.enableRotate = false;
 	renderer.outputColorSpace = THREE.SRGBColorSpace;
 	const loader = new GLTFLoader();
 
 	// Add handler for camera button
+	var stream = null;
+	const supportedConstraints = navigator.mediaDevices.getSupportedConstraints();
+
+	function fixAspectRatio() {
+		if (supportedConstraints.aspectRatio && stream) {
+			const tracks = stream.getVideoTracks();
+
+			for (const track of tracks) {
+				track.applyConstraints({aspectRatio: (WebCamDisplay.scrollWidth / WebCamDisplay.scrollHeight)});
+			}
+		}
+	};
+
 	const WebCamToggle = document.getElementById('camera-toggle-button');
 	const WebCamDisplay = document.getElementById('webcam');
 	if (navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) {
@@ -320,22 +338,11 @@ window.addEventListener("load", async () => {
 				console.info("Camera found");
 				WebCamToggle.style = '';
 
-				var stream = null;
 				
 				const contraints = {
 					video: true,
 				};
 
-				const supportedConstraints = navigator.mediaDevices.getSupportedConstraints();
-				function fixAspectRatio() {
-					if (supportedConstraints.aspectRatio && stream) {
-						const tracks = stream.getVideoTracks();
-
-						for (const track of tracks) {
-							track.applyConstraints({aspectRatio: (WebCamDisplay.scrollWidth / WebCamDisplay.scrollHeight)});
-						}
-					}
-				};
 				if (supportedConstraints.facingMode) {
 					contraints.video = {facingMode: "environment"};
 				}
@@ -345,6 +352,8 @@ window.addEventListener("load", async () => {
 					if (WebCamToggle.ariaChecked === "true") {
 						WebCamToggle.ariaChecked = "false";
 						WebCamToggle.setAttribute('aria-checked', 'false');
+
+						controls.enabled = false;
 
 						if (stream) {
 							const tracks = stream.getVideoTracks();
@@ -356,8 +365,6 @@ window.addEventListener("load", async () => {
 
 							stream = null;
 						}
-						
-						screen.orientation.removeEventListener("change", fixAspectRatio);
 					} else {
 						try {
 							stream = await navigator.mediaDevices.getUserMedia(contraints);
@@ -371,12 +378,10 @@ window.addEventListener("load", async () => {
 						WebCamToggle.ariaChecked = "true";
 						WebCamToggle.setAttribute('aria-checked', 'true');
 
-						fixAspectRatio();
 						WebCamDisplay.srcObject = stream;
 						WebCamDisplay.onloadedmetadata = () => {
 							WebCamDisplay.play();
-
-							screen.orientation.addEventListener("change", fixAspectRatio);
+							controls.enabled = true;
 						}
 					}
 				});
@@ -641,6 +646,9 @@ window.addEventListener("load", async () => {
 					// Do nothing
 				}
 			}
+
+			// Fix webcam aspect ratio if it exists
+			fixAspectRatio();
 
 			// Render the scene
 			renderer.render(scene, camera);

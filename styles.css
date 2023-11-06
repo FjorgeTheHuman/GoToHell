@@ -49,7 +49,7 @@ button {
 }
 
 #center {
-	pointer-events: none;
+	pointer-events: auto;
 	background: transparent;
 	display: flex;
 	flex-grow: 100;

@@ -1,13 +1,18 @@
 @media (prefers-color-scheme: light) {
 }
 
+@font-face {
+	font-family: twemoji;
+	src: url(static/TwitterColorEmoji-SVGinOT.ttf);
+}
+
 a, a:visited {
 	color: #91d5ff;
 }
 
 body {
 	height: 100dvh;
-	font-family: sans-serif;
+	font-family: twemoji, sans-serif;
 	background: #1a1a1a;
 	color: rgb(200, 200, 200);
 	padding: 0px;
@@ -183,8 +188,6 @@ button {
 	height: 42px;
 	width: 42px;
 	text-align: center;
-	color: transparent;
-	text-shadow: 0 0 0 white;
 }
 
 #location-select-box-button {
@@ -217,8 +220,7 @@ button {
 
 button,
 .location-select-box-option > label {
-	/* A weird bug in Safari requires this transition to be 100ms */
-	transition: background-color 100ms ease-in-out;
+	transition: background-color 200ms ease-in-out;
 }
 
 .location-select-box-option > label {
@@ -308,6 +310,10 @@ button[aria-checked="true"]:hover {
   to {
     opacity: 1;
   }
+}
+
+button > span {
+	filter: brightness(0) invert(80%) sepia(0%) saturate(0%) hue-rotate(157deg) brightness(96%) contrast(106%);
 }
 
 /* vim:ts=2:sw=2:noexpandtab

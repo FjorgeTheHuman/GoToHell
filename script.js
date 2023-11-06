@@ -300,6 +300,7 @@ window.addEventListener("load", async () => {
 	// Create the required three.js objects
 	const scene = new THREE.Scene();
 	let camera = new THREE.PerspectiveCamera(75, 1, 0.1, 10.1);
+	camera.z = 0.1;
 	const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
 	const controls = new OrbitControls(camera, document.getElementById('controls-overlay'));
 	controls.enabled = false;
@@ -415,6 +416,7 @@ window.addEventListener("load", async () => {
 
 			// Reset camera
 			camera = new THREE.PerspectiveCamera(75, 1, 0.1, 10.1);
+			camera.z = 0.1;
 		}
 
 		ARToggle.addEventListener('click', (event) => {

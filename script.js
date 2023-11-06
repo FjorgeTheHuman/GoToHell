@@ -299,17 +299,19 @@ window.addEventListener("load", async () => {
 
 	// Create the required three.js objects
 	const scene = new THREE.Scene();
-	const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 10.1);
+	const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 30);
 	const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+	renderer.outputColorSpace = THREE.SRGBColorSpace;
 	const controls = new OrbitControls(camera, document.getElementById('controls-overlay'));
 	//controls.enabled = false;
 	controls.enablePan = false;
 	controls.enableRotate = false;
 	controls.enableDamping = true;
 	controls.enableZoom = true;
+	controls.maxDistance = 20;
+	controls.minDistance = 0.5;
 	controls.target = new THREE.Vector3(0, 0, -5);
 	controls.saveState();
-	renderer.outputColorSpace = THREE.SRGBColorSpace;
 	const loader = new GLTFLoader();
 
 	// Add handler for camera button

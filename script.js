@@ -362,7 +362,7 @@ window.addEventListener("load", async () => {
 						try {
 							stream = await navigator.mediaDevices.getUserMedia(contraints);
 						} catch (error) {
-							if (error instanceOf NotAllowedError) {
+							if (error instanceof NotAllowedError) {
 								displayWarning('webcam-not-allowed', 'Please allow the website to access the webcam.', 500);
 							}
 							return;

@@ -322,7 +322,7 @@ window.addEventListener("load", async () => {
 					video: true,
 				};
 
-				const supportedConstraints = navigator.mediadevices.getsupportedconstraints();
+				const supportedConstraints = navigator.mediaDevices.getSupportedConstraints();
 				function fixAspectRatio() {
 					if (supportedConstraints.aspectRatio && stream) {
 						stream.applyContraints({aspectRatio: (WebCamDisplay.scrollWidth / WebCamDisplay.scrollHeight)});

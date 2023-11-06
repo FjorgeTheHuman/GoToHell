@@ -362,7 +362,7 @@ window.addEventListener("load", async () => {
 	}
 
 	// Add some light
-	const alight = new THREE.AmbientLight(0x8c8c8c);
+	const alight = new THREE.AmbientLight(0xa8071a);
 	scene.add(alight);
 
 	// Add renderer to DOM
@@ -375,7 +375,7 @@ window.addEventListener("load", async () => {
 		model.scale.set(0.3, 0.3, 0.3);
 
 		// Replace model material
-		var newMaterial = new THREE.MeshStandardMaterial({color: 0xff0000});
+		var newMaterial = new THREE.MeshStandardMaterial({color: 0xffffff});
 		model.traverse((o) => {
 			if (o.isMesh) o.material = newMaterial;
 		});
@@ -384,13 +384,13 @@ window.addEventListener("load", async () => {
 		const arrowGroup = new THREE.Group();
 		arrowGroup.add(model);
 
-		// Add an orange light to the model
-		const orangeLight = new THREE.PointLight(0xfa8c16, 20);
-		orangeLight.position.set(0, 0, 5);
-		model.add(orangeLight);
+		// Add a yellow light to the model
+		const yellowLight = new THREE.PointLight(0xad8b00, 15);
+		yellowLight.position.set(0, 5, 0);
+		model.add(yellowLight);
 
 		// Add a light to the group
-		const light = new THREE.PointLight(0xa6a6a6, 15);
+		const light = new THREE.PointLight(0xad6800, 10);
 		light.position.set(0, 1, 7.5);
 		arrowGroup.add(light);
 

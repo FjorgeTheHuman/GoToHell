@@ -130,7 +130,7 @@ window.addEventListener("load", async () => {
 	};
 
 	// Display warnings as HTML
-	function displayWarning(id, message = null) {
+	function displayWarning(id, message = null, timeout = 0) {
 		if (message && !$(`#${id}`).length) {
 			console.warn(`code: ${id}\n${message}`);
 
@@ -140,6 +140,10 @@ window.addEventListener("load", async () => {
 				console.info(`User dismissed warning ${id}.`);
 				$(this).css('display', 'none');
 			});
+
+			if (timeout > 0) {
+				setTimeout(displayWarning(id), timeout);
+			};
 		} else if (!message && $(`#${id}`).length) {
 			console.info(`Removing warning ${id}.`);
 
@@ -355,10 +359,17 @@ window.addEventListener("load", async () => {
 						
 						screen.orientation.removeEventListener("change", fixAspectRatio);
 					} else {
+						try {
+							stream = await navigator.mediaDevices.getUserMedia(contraints);
+						} catch (error) {
+							if (error instanceOf NotAllowedError) {
+								displayWarning('webcam-not-allowed', 'Please allow the website to access the webcam.', 500);
+							}
+							return;
+						}
+
 						WebCamToggle.ariaChecked = "true";
 						WebCamToggle.setAttribute('aria-checked', 'true');
-
-						stream = await navigator.mediaDevices.getUserMedia(contraints);
 
 						fixAspectRatio();
 						WebCamDisplay.srcObject = stream;
@@ -412,6 +423,8 @@ window.addEventListener("load", async () => {
 			} else {
 				ARToggle.ariaChecked = "true";
 				ARToggle.setAttribute('aria-checked', 'true');
+
+				displayWarning('webxr-experimental', 'AR mode is still experimental. Expect bugs.', 1000);
 
 				renderer.xr.enabled = true;
 
@@ -576,7 +589,7 @@ window.addEventListener("load", async () => {
 				arrowGroup.setRotationFromEuler(rot);
 				arrowGroup.rotateX(sRad(-verticalAngle));
 			} else if (rotation.pitch != null && rotation.roll != null) {
-				displayWarning('motion-no-support', 'Due to your device\'s capabilities, there may be a large error in roll when the device is oriented vertically.');
+				displayWarning('motion-no-support', 'Due to your device\'s capabilities, there may be a large error in roll when the device is oriented vertically.', 500);
 				console.warn("No acceleration data. Falling back to orientation API.");
 				var pitch_c = -rotation.pitch;
 				var roll_c = -rotation.roll;

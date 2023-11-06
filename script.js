@@ -384,7 +384,7 @@ window.addEventListener("load", async () => {
 		const arrowGroup = new THREE.Group();
 
 		arrowGroup.add(model);
-		model.position.z = -5;
+		arrowGroup.position.z = -5;
 
 		// Add a light to the model
 		const light = new THREE.PointLight(0xa6a6a6, 10);

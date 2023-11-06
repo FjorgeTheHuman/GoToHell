@@ -305,6 +305,7 @@ window.addEventListener("load", async () => {
 	controls.enabled = false;
 	controls.enablePan = false;
 	controls.enableRotate = false;
+	controls.enableDamping = true;
 	renderer.outputColorSpace = THREE.SRGBColorSpace;
 	const loader = new GLTFLoader();
 
@@ -354,6 +355,7 @@ window.addEventListener("load", async () => {
 						WebCamToggle.setAttribute('aria-checked', 'false');
 
 						controls.enabled = false;
+						controls.reset();
 
 						if (stream) {
 							const tracks = stream.getVideoTracks();
@@ -649,6 +651,9 @@ window.addEventListener("load", async () => {
 
 			// Fix webcam aspect ratio if it exists
 			fixAspectRatio();
+
+			// Update the controls
+			controls.update();
 
 			// Render the scene
 			renderer.render(scene, camera);

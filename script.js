@@ -303,7 +303,7 @@ window.addEventListener("load", async () => {
 	camera.z = 1;
 	const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
 	const controls = new OrbitControls(camera, document.getElementById('controls-overlay'));
-	controls.enabled = false;
+	//controls.enabled = false;
 	controls.enablePan = false;
 	controls.enableRotate = false;
 	controls.enableDamping = true;
@@ -356,7 +356,7 @@ window.addEventListener("load", async () => {
 						WebCamToggle.ariaChecked = "false";
 						WebCamToggle.setAttribute('aria-checked', 'false');
 
-						controls.enabled = false;
+						//controls.enabled = false;
 						controls.reset();
 
 						if (stream) {

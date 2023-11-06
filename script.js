@@ -359,9 +359,10 @@ window.addEventListener("load", async () => {
 						fixAspectRatio();
 						WebCamDisplay.srcObject = stream;
 						WebCamDisplay.onloadedmetadata = () => {
-						WebCamDisplay.play();
+							WebCamDisplay.play();
 
-						screen.orientation.addEventListener("change", fixAspectRatio);
+							screen.orientation.addEventListener("change", fixAspectRatio);
+						}
 					}
 				});
 			}

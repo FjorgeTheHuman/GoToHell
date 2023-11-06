@@ -62,6 +62,7 @@ button {
 	height: 100%;
 	margin: auto;
 	pointer-events: none;
+	z-index: 0;
 }
 
 #webcam {
@@ -69,6 +70,15 @@ button {
 	width: 100%;
 	position: absolute;
 	z-index: -1;
+}
+
+#controls-overlay {
+	height: 100%;
+	width: 100%;
+	position: absolute;
+	background: transparent;
+	pointer-events: auto;
+	z-index: 1;
 }
 
 #top-bar, #bottom-bar {

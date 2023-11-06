@@ -325,7 +325,11 @@ window.addEventListener("load", async () => {
 				const supportedConstraints = navigator.mediaDevices.getSupportedConstraints();
 				function fixAspectRatio() {
 					if (supportedConstraints.aspectRatio && stream) {
-						stream.applyContraints({aspectRatio: (WebCamDisplay.scrollWidth / WebCamDisplay.scrollHeight)});
+						const tracks = stream.getVideoTracks();
+
+						for (const track of tracks) {
+							track.applyContraints({aspectRatio: (WebCamDisplay.scrollWidth / WebCamDisplay.scrollHeight)});
+						}
 					}
 				};
 				if (supportedConstraints.facingMode) {
@@ -544,16 +548,15 @@ window.addEventListener("load", async () => {
 			// Display error if the device has no compass
 			if (!hdn && !DeviceOrientationEvent.requestPermission) {
 				displayError("compass-no-support", "Your device does not support getting compass headings.");
-				// TEST: Override this
-				//return;
+				return;
 			} else {
 				displayError("compass-no-support");
 			}
 
 			// Display error if the device has no geolocation
 			if (latitude == null && longitude == null) {
-				displayError("geo-no-support", "Your device does not support geolocation.");
-				return;
+				// displayError("geo-no-support", "Your device does not support geolocation.");
+				// return;
 			} else {
 				displayError("geo-no-support");
 			}

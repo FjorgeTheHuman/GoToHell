@@ -398,7 +398,7 @@ window.addEventListener("load", async () => {
 		arrowGroup.add(yellowLightBottom);
 
 		// Add a light to the group
-		const light = new THREE.PointLight(0x474747, 50);
+		const light = new THREE.PointLight(0x474747, 7);
 		light.position.set(0, 4, 3);
 		arrowGroup.add(light);
 

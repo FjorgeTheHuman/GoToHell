@@ -299,6 +299,75 @@ window.addEventListener("load", async () => {
 	renderer.outputColorSpace = THREE.SRGBColorSpace;
 	const loader = new GLTFLoader();
 
+	// Add handler for camera button
+	const WebCamToggle = document.getElementById('camera-toggle-button');
+	const WebCamDisplay = document.getElementById('webcam');
+	if (navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) {
+		navigator.mediaDevices.enumerateDevices().then((devices) => {
+			var supported = false;
+
+			devices.forEach((device) => {
+				if (device.kind === 'videoinput') {
+					supported = true;
+				}
+			});
+
+			if (supported) {
+				console.info("Camera found");
+				WebCamToggle.style = '';
+
+				var stream = null;
+				
+				const contraints = {
+					video: true,
+				};
+
+				const supportedConstraints = navigator.mediadevices.getsupportedconstraints();
+				function fixAspectRatio() {
+					if (supportedConstraints.aspectRatio && stream) {
+						stream.applyContraints({aspectRatio: (WebCamDisplay.scrollWidth / WebCamDisplay.scrollHeight)});
+					}
+				};
+				if (supportedConstraints.facingMode) {
+					contraints.facingMode = "environment";
+				}
+
+
+				WebCamToggle.addEventListener('click', async (event) => {
+					if (WebCamToggle.ariaChecked === "true") {
+						WebCamToggle.ariaChecked = "false";
+						WebCamToggle.setAttribute('aria-checked', 'false');
+
+						if (stream) {
+							const tracks = stream.getVideoTracks();
+
+							for (const track of tracks) {
+								track.enabled = false;
+								stream.removeTrack(track);
+							}
+
+							stream = null;
+						}
+						
+						screen.orientation.removeEventListener("change", fixAspectRatio);
+					} else {
+						WebCamToggle.ariaChecked = "true";
+						WebCamToggle.setAttribute('aria-checked', 'true');
+
+						stream = await navigator.mediaDevices.getUserMedia(contraints);
+
+						fixAspectRatio();
+						WebCamDisplay.srcObject = stream;
+						WebCamDisplay.onloadedmetadata = () => {
+						WebCamDisplay.play();
+
+						screen.orientation.addEventListener("change", fixAspectRatio);
+					}
+				});
+			}
+		}).catch((err) => {});
+	}
+
 	// Add handler for AR toggle
 	const ARToggle = document.getElementById('ar-toggle-button');
 	var ARSession = null;

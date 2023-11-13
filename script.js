@@ -318,18 +318,33 @@ window.addEventListener("load", async () => {
 	var stream = null;
 	const supportedConstraints = navigator.mediaDevices.getSupportedConstraints();
 
-	function fixAspectRatio() {
-		if (supportedConstraints.aspectRatio && stream) {
-			const tracks = stream.getVideoTracks();
+	const WebCamToggle = document.getElementById('camera-toggle-button');
+	const WebCamDisplay = document.getElementById('webcam');
 
+	function fixAspectRatio() {
+		if (stream) {
+			var tracks = stream.getVideoTracks();
+		}
+
+		if (supportedConstraints.aspectRatio) {
 			for (const track of tracks) {
 				track.applyConstraints({aspectRatio: (WebCamDisplay.scrollWidth / WebCamDisplay.scrollHeight)});
 			}
 		}
+
+		if (supportedConstraints.width) {
+			for (const track of tracks) {
+				track.applyConstraints({width: WebCamDisplay.clientWidth});
+			}
+		}
+
+		if (supportedConstraints.height) {
+			for (const track of tracks) {
+				track.applyConstraints({height: WebCamDisplay.clientHeight});
+			}
+		}
 	};
 
-	const WebCamToggle = document.getElementById('camera-toggle-button');
-	const WebCamDisplay = document.getElementById('webcam');
 	if (navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) {
 		navigator.mediaDevices.enumerateDevices().then((devices) => {
 			var supported = false;

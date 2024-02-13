@@ -2,8 +2,6 @@ import * as THREE from 'three';
 import WebGL from 'three/addons/capabilities/WebGL.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import WebXRPolyfill from 'webxr-polyfill';
-const polyfill = new WebXRPolyfill();
 
 // Ensuring radians are positive and between 0 and 2pi
 function sRad(rad) {

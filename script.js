@@ -314,8 +314,6 @@ window.addEventListener("load", async () => {
 
 	// Add handler for camera button
 	var stream = null;
-	const supportedConstraints = navigator.mediaDevices.getSupportedConstraints();
-
 	const WebCamToggle = document.getElementById('camera-toggle-button');
 	const WebCamDisplay = document.getElementById('webcam');
 
@@ -323,22 +321,24 @@ window.addEventListener("load", async () => {
 		if (stream) {
 			var tracks = stream.getVideoTracks();
 		}
-		
-		if ('aspectRatio' in navigator.mediaDevices.getSupportedConstraints()) {
-			for (const track of tracks) {
-				track.applyConstraints({aspectRatio: (WebCamDisplay.scrollWidth / WebCamDisplay.scrollHeight)});
-			}
-		}
 
-		if ('width' in navigator.mediaDevices.getSupportedConstraints()) {
-			for (const track of tracks) {
-				track.applyConstraints({width: WebCamDisplay.clientWidth});
+		if ('getSupportedConstraints' in navigator.mediaDevices) {
+			if ('aspectRatio' in navigator.mediaDevices.getSupportedConstraints()) {
+				for (const track of tracks) {
+					track.applyConstraints({aspectRatio: (WebCamDisplay.scrollWidth / WebCamDisplay.scrollHeight)});
+				}
 			}
-		}
-
-		if ('height' in navigator.mediaDevices.getSupportedConstraints()) {
-			for (const track of tracks) {
-				track.applyConstraints({height: WebCamDisplay.clientHeight});
+	
+			if ('width' in navigator.mediaDevices.getSupportedConstraints()) {
+				for (const track of tracks) {
+					track.applyConstraints({width: WebCamDisplay.clientWidth});
+				}
+			}
+	
+			if ('height' in navigator.mediaDevices.getSupportedConstraints()) {
+				for (const track of tracks) {
+					track.applyConstraints({height: WebCamDisplay.clientHeight});
+				}
 			}
 		}
 	};
@@ -361,7 +361,7 @@ window.addEventListener("load", async () => {
 					video: true,
 				};
 
-				if (supportedConstraints.facingMode) {
+				if ('getSupportedConstraints' in navigator.mediaDevices && 'facingMode' in navigator.mediaDevices.getSupportedConstraints()) {
 					contraints.video = {facingMode: "environment"};
 				}
 
@@ -670,11 +670,11 @@ window.addEventListener("load", async () => {
 				}
 			}
 
-			// Fix webcam aspect ratio if it exists
-			fixAspectRatio();
-
 			// Render the scene
 			renderer.render(scene, camera);
+
+			// Fix webcam aspect ratio if it exists
+			fixAspectRatio();
 		};
 
 		// Draw the arrow

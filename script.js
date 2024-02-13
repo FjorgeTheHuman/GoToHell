@@ -324,19 +324,21 @@ window.addEventListener("load", async () => {
 			var tracks = stream.getVideoTracks();
 		}
 
-		if (typeof supportedConstraints.aspectRatio !== 'undefined') {
+		console.log(typeof supportedConstraints);
+		
+		if (aspectRatio in supportedConstraints) {
 			for (const track of tracks) {
 				track.applyConstraints({aspectRatio: (WebCamDisplay.scrollWidth / WebCamDisplay.scrollHeight)});
 			}
 		}
 
-		if (typeof supportedConstraints.width !== 'undefined') {
+		if (width in supportedConstraints) {
 			for (const track of tracks) {
 				track.applyConstraints({width: WebCamDisplay.clientWidth});
 			}
 		}
 
-		if (typeof supportedConstraints.height !== 'undefined') {
+		if (height in supportedConstraints.height) {
 			for (const track of tracks) {
 				track.applyConstraints({height: WebCamDisplay.clientHeight});
 			}

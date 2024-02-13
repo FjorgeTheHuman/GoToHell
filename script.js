@@ -323,22 +323,20 @@ window.addEventListener("load", async () => {
 		if (stream) {
 			var tracks = stream.getVideoTracks();
 		}
-
-		console.log(typeof supportedConstraints);
 		
-		if (aspectRatio in supportedConstraints) {
+		if ('aspectRatio' in supportedConstraints) {
 			for (const track of tracks) {
 				track.applyConstraints({aspectRatio: (WebCamDisplay.scrollWidth / WebCamDisplay.scrollHeight)});
 			}
 		}
 
-		if (width in supportedConstraints) {
+		if ('width' in supportedConstraints) {
 			for (const track of tracks) {
 				track.applyConstraints({width: WebCamDisplay.clientWidth});
 			}
 		}
 
-		if (height in supportedConstraints.height) {
+		if ('height' in supportedConstraints) {
 			for (const track of tracks) {
 				track.applyConstraints({height: WebCamDisplay.clientHeight});
 			}

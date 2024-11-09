@@ -1,3 +1,6 @@
+> [!WARNING]
+> Currently broken. I need to get a Mac or something to fix it
+
 > Ooh, Hell is a place on Earth \
 > — Belinda Carlisle
 

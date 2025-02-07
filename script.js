@@ -320,24 +320,24 @@ window.addEventListener("load", async () => {
 	function fixAspectRatio() {
 		if (stream) {
 			var tracks = stream.getVideoTracks();
-		}
 
-		if ('getSupportedConstraints' in navigator.mediaDevices && navigator.mediaDevices.getSupportedConstraints()) {
-			if ('aspectRatio' in navigator.mediaDevices.getSupportedConstraints()) {
-				for (const track of tracks) {
-					track.applyConstraints({aspectRatio: (WebCamDisplay.scrollWidth / WebCamDisplay.scrollHeight)});
+			if ('getSupportedConstraints' in navigator.mediaDevices && navigator.mediaDevices.getSupportedConstraints()) {
+				if ('aspectRatio' in navigator.mediaDevices.getSupportedConstraints()) {
+					for (const track of tracks) {
+						track.applyConstraints({aspectRatio: (WebCamDisplay.scrollWidth / WebCamDisplay.scrollHeight)});
+					}
 				}
-			}
-	
-			if ('width' in navigator.mediaDevices.getSupportedConstraints()) {
-				for (const track of tracks) {
-					track.applyConstraints({width: WebCamDisplay.clientWidth});
+		
+				if ('width' in navigator.mediaDevices.getSupportedConstraints()) {
+					for (const track of tracks) {
+						track.applyConstraints({width: WebCamDisplay.clientWidth});
+					}
 				}
-			}
-	
-			if ('height' in navigator.mediaDevices.getSupportedConstraints()) {
-				for (const track of tracks) {
-					track.applyConstraints({height: WebCamDisplay.clientHeight});
+		
+				if ('height' in navigator.mediaDevices.getSupportedConstraints()) {
+					for (const track of tracks) {
+						track.applyConstraints({height: WebCamDisplay.clientHeight});
+					}
 				}
 			}
 		}
@@ -528,9 +528,7 @@ window.addEventListener("load", async () => {
 		renderer.render(scene, camera);
 
 		// Update all the displays
-		function updateDisplays() {
-			console.debug('New frame');
-			
+		function updateDisplays() {			
 			// Update the controls
 			controls.update();
 
@@ -602,10 +600,7 @@ window.addEventListener("load", async () => {
 				displayError("geo-no-support");
 			}
 
-			// Different modes for a device with full sensors, only orientation data, and only compass
-			console.log(`Roll: ${acceleration.roll}`);
-			console.log(`Pitch: ${acceleration.pitch}`);
-			
+			// Different modes for a device with full sensors, only orientation data, and only compass			
 			if (acceleration.roll != null && acceleration.pitch != null) {
 				var yaw_c = hdn - bearing;
 				var pitch_c = sRad(acceleration.pitch);
@@ -650,7 +645,6 @@ window.addEventListener("load", async () => {
 				arrowGroup.rotation.y = 0;
 				arrowGroup.rotation.z = hdn - bearing;
 			}
-			console.debug('Step 1');
 
 			// Vibrate if possible and arrow is close enough
 			if (Math.abs(bearing - hdn) < (Math.PI / 18)) {
@@ -660,7 +654,6 @@ window.addEventListener("load", async () => {
 			} else if (canVibrate) {
 				window.navigator.vibrate(0);
 			}
-			console.debug('Step 2');
 
 			// Display the distance between user location and Hell
 			$("#distance").html(`${distance.toFixed(2).toLocaleString()}km`);
@@ -675,19 +668,15 @@ window.addEventListener("load", async () => {
 					// Do nothing
 				}
 			}
-			console.debug('Step 3');
 
 			// Render the scene
 			renderer.render(scene, camera);
-			console.debug('Step 4');
 
 			// Fix webcam aspect ratio if it exists
 			fixAspectRatio();
-			console.debug('Finished');
 		};
 
 		// Update display every frame
-		console.info('Animation started!');
 		renderer.setAnimationLoop(updateDisplays);
 	}, undefined, function (error) {
 		console.error(error);

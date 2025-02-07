@@ -137,6 +137,12 @@ button {
 	z-index: 50;
 }
 
+img.button-icon {
+	width: 60%;
+	filter: invert(80%);
+	vertical-align: middle;
+}
+
 #location-select-box,
 #camera-control-buttons {
 	position: absolute;

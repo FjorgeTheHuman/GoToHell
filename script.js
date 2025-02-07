@@ -532,9 +532,6 @@ window.addEventListener("load", async () => {
 			// Update the controls
 			controls.update();
 
-			// Call function every frame
-			renderer.setAnimationLoop(updateDisplays);
-
 			// Find the angles and distance to the selected location
 			let loc = parseInt(locationSelectForm.elements.location.value);
 			let distance;
@@ -682,8 +679,9 @@ window.addEventListener("load", async () => {
 			fixAspectRatio();
 		};
 
-		// Draw the arrow
-		updateDisplays();
+		// Update display every frame
+		console.info('Animation started!');
+		renderer.setAnimationLoop(updateDisplays);
 	}, undefined, function (error) {
 		console.error(error);
 	});

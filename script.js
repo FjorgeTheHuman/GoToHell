@@ -521,8 +521,8 @@ window.addEventListener("load", async () => {
 		scene.add(arrowGroup);
 		
 		// Make the render size a square
-		const size = Math.min(document.getElementById("center").clientWidth, document.getElementById("center").clientHeight);
-		renderer.setSize(size, size);
+		//const size = Math.min(document.getElementById("center").clientWidth, document.getElementById("center").clientHeight);
+		renderer.setSize(document.getElementById("center").clientWidth, document.getElementById("center").clientHeight);
 
 		// Render the scene
 		renderer.render(scene, camera);

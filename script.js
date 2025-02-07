@@ -650,6 +650,7 @@ window.addEventListener("load", async () => {
 				arrowGroup.rotation.y = 0;
 				arrowGroup.rotation.z = hdn - bearing;
 			}
+			console.debug('Step 1');
 
 			// Vibrate if possible and arrow is close enough
 			if (Math.abs(bearing - hdn) < (Math.PI / 18)) {
@@ -659,6 +660,7 @@ window.addEventListener("load", async () => {
 			} else if (canVibrate) {
 				window.navigator.vibrate(0);
 			}
+			console.debug('Step 2');
 
 			// Display the distance between user location and Hell
 			$("#distance").html(`${distance.toFixed(2).toLocaleString()}km`);
@@ -673,12 +675,15 @@ window.addEventListener("load", async () => {
 					// Do nothing
 				}
 			}
+			console.debug('Step 3');
 
 			// Render the scene
 			renderer.render(scene, camera);
+			console.debug('Step 4');
 
 			// Fix webcam aspect ratio if it exists
 			fixAspectRatio();
+			console.debug('Finished');
 		};
 
 		// Update display every frame

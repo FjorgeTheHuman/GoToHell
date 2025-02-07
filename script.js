@@ -52,7 +52,7 @@ window.addEventListener("load", async () => {
 	const canVibrate = ('vibrate' in window.navigator);
 
 	// Fetch location data JSON
-  const data = JSON.parse(await (await fetch(new Request('./static/locations.json'))).text());
+	const data = JSON.parse(await (await fetch(new Request('./static/locations.json'))).text());
 
 	// Populate menu of locations
 	for (let i = -1; i < data.locations.length; i++) {
@@ -529,6 +529,8 @@ window.addEventListener("load", async () => {
 
 		// Update all the displays
 		function updateDisplays() {
+			console.debug('New frame');
+			
 			// Update the controls
 			controls.update();
 

@@ -604,6 +604,9 @@ window.addEventListener("load", async () => {
 			}
 
 			// Different modes for a device with full sensors, only orientation data, and only compass
+			console.log(`Roll: ${acceleration.roll}`);
+			console.log(`Pitch: ${acceleration.pitch}`);
+			
 			if (acceleration.roll != null && acceleration.pitch != null) {
 				var yaw_c = hdn - bearing;
 				var pitch_c = sRad(acceleration.pitch);
